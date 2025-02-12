@@ -1,0 +1,6 @@
+@KuechenQuestAPI_HostAddress = http://localhost:5211
+
+GET {{KuechenQuestAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
