@@ -1,51 +1,51 @@
 DROP DATABASE IF EXISTS KuechenQuest;
-
 CREATE DATABASE KuechenQuest;
-
 USE KuechenQuest;
 
 CREATE TABLE Difficulty(
     ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     NAME VARCHAR(50) NOT NULL
 );
+
 CREATE TABLE Utensil(
     ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     NAME VARCHAR(50) NOT NULL,
-    IMAGE LONGBLOB
+    IMAGE LONGBLOB DEFAULT NULL
 );
+
 CREATE TABLE Category(
     ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     NAME VARCHAR(50) NOT NULL
 );
+
+CREATE TABLE Achievement( 
+    ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    NAME VARCHAR(255) NOT NULL,
+    IMAGE LONGBLOB DEFAULT NULL
+);
+
 CREATE TABLE Ingredient(
     ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     NAME VARCHAR(50) NOT NULL,
-    CATEGORY INT NOt NULL,
-    IMAGE LONGBLOB,
+    IMAGE LONGBLOB DEFAULT NULL,
+    CATEGORY INT NOT NULL,
     CONSTRAINT fk_Category
         FOREIGN KEY (CATEGORY) REFERENCES Category(ID)
 );
+
 CREATE TABLE Recipe(
     ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     NAME VARCHAR(255) NOT NULL,
-    INGREDIENTS VARCHAR(255) DEFAULT '{}' NOT NULL,
-    I_QUANTITIES VARCHAR(255) DEFAULT '{}' NOT NULL,
     TIME INT NOT NULL,
     DIFFICULTY INT NOT NULL,
     INSTRUCTIONS VARCHAR(500),
-    RATING TINYINT,
+    RATING TINYINT DEFAULT 0,
     RATINGCOUNT INT DEFAULT 0,
-    UTENSILS VARCHAR(255) DEFAULT '{}' NOT NULL,
-    U_QUANTITIES VARCHAR(255) DEFAULT '{}' NOT NULL,
-    IMAGE LONGBLOB,
+    IMAGE LONGBLOB DEFAULT NULL,
     CONSTRAINT fk_Difficulty
-        FOREIGN KEY (Difficulty) REFERENCES Difficulty(ID)
+        FOREIGN KEY (DIFFICULTY) REFERENCES Difficulty(ID)  
 );
-CREATE TABLE Achievment(
-    ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    NAME VARCHAR(255) NOT NULL,
-    IMAGE LONGBLOB
-);
+
 CREATE TABLE User(
     ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     NAME VARCHAR(255) NOT NULL,
@@ -55,25 +55,83 @@ CREATE TABLE User(
     EMAIL VARCHAR(255)
 );
 
-INSERT INTO Difficulty(NAME) VALUES('Leicht'),('Mittel'),('Schwer');
+CREATE TABLE Recipe_Ingredient(
+    ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    RECIPEID INT NOT NULL,
+    INGREDIENTID INT NOT NULL,
+    QUANTITY FLOAT NOT NULL,
+    CONSTRAINT fk_I_RecipeID
+        FOREIGN KEY (RECIPEID) REFERENCES Recipe(ID),
+    CONSTRAINT fk_IngredientID
+        FOREIGN KEY (INGREDIENTID) REFERENCES Ingredient(ID)
+);
 
-INSERT INTO User(NAME,EMAIL,PASSWORD) VALUES('Niklas','Niklas@email.de','Admin');
-INSERT INTO User(NAME,EMAIL,PASSWORD) VALUES('Florian','Florian@email.de','Admin');
-INSERT INTO User(NAME,EMAIL,PASSWORD) VALUES('Cornelius','Cornelius@email.de','Admin');
-INSERT INTO User(NAME,EMAIL,PASSWORD) VALUES('Jonas','Jonas@email.de','Admin');
+CREATE TABLE Recipe_Utensil(
+    ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    RECIPEID INT NOT NULL,
+    UTENSILID INT NOT NULL,
+    QUANTITY INT NOT NULL,
+    CONSTRAINT fk_U_RecipeID
+        FOREIGN KEY (RECIPEID) REFERENCES Recipe(ID),
+    CONSTRAINT fk_UtensilID
+        FOREIGN KEY (UTENSILID) REFERENCES Utensil(ID)
+);
 
-INSERT INTO Utensil (NAME, IMAGE) VALUES 
-('Löffel', NULL),
-('Messer', NULL),
-('Schneidebrett', NULL),
-('Pfanne', NULL),
-('Rührbesen', NULL);
+CREATE TABLE User_Achievement(  
+    ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    USERID INT NOT NULL,
+    ACHIEVEMENTID INT NOT NULL,  
+    TIME TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,  
+    CONSTRAINT fk_UserID
+        FOREIGN KEY (USERID) REFERENCES User(ID),
+    CONSTRAINT fk_AchievementID  
+        FOREIGN KEY (ACHIEVEMENTID) REFERENCES Achievement(ID)
+);
 
-INSERT INTO Category (NAME) VALUES ('Unkategorisiert'),('Obst/Gemuese'),('Fleisch'),('Milchprodukte');
+INSERT INTO Difficulty(NAME) VALUES ('Leicht'), ('Mittel'), ('Schwer');
 
-INSERT INTO Ingredient (NAME, CATEGORY, IMAGE) VALUES 
-('Mehl', 1, NULL),
-('Zucker', 1, NULL),
-('Eier', 1, NULL),
-('Milch', 3, NULL),
-('Butter', 3, NULL);
+INSERT INTO User(NAME, EMAIL, PASSWORD) VALUES
+('Niklas', 'Niklas@email.de', 'Admin'),
+('Florian', 'Florian@email.de', 'Admin'),
+('Cornelius', 'Cornelius@email.de', 'Admin'),
+('Jonas', 'Jonas@email.de', 'Admin');
+
+INSERT INTO Utensil (NAME) VALUES 
+('Löffel'),
+('Messer'),
+('Schneidebrett'),
+('Pfanne'),
+('Rührbesen'),
+('Schüssel');
+
+INSERT INTO Category (NAME) VALUES ('Unkategorisiert'), ('Obst/Gemuese'), ('Fleisch'), ('Milchprodukte');
+
+INSERT INTO Ingredient (NAME, CATEGORY) VALUES 
+('Mehl', 1),
+('Zucker', 1),
+('Eier', 1),
+('Milch', 3),
+('Butter', 3);
+
+-- Rezept für Pfannkuchen
+INSERT INTO Recipe(NAME, TIME, DIFFICULTY, INSTRUCTIONS)
+VALUES ('Pfannkuchen',20,2,'Alle Zutaten vermengen und in der Pfanne ausbacken.');
+-- Zutaten speichern
+INSERT INTO Recipe_Ingredient(RECIPEID, INGREDIENTID, QUANTITY)
+VALUES 
+(1, 1, 200),   -- 200g Mehl
+(1, 2, 50),    -- 50g Zucker
+(1, 3, 2),     -- 2 Eier
+(1, 4, 250),   -- 250ml Milch
+(1, 5, 50);    -- 50g Butter
+-- Utensilien speichern
+INSERT INTO Recipe_Utensil (RECIPEID, UTENSILID, QUANTITY)
+VALUES 
+(1, 1, 1),  -- 1x Löffel
+(1, 2, 1),  -- 1x Messer
+(1, 3, 1),  -- 1x Schneidebrett
+(1, 4, 1);  -- 1x Pfanne
+
+-- select * from Recipe where ID = 1;
+-- select * from Recipe_Utensil ru join Utensil u on ru.UTENSILID = u.ID where ru.RECIPEID = 1;
+-- select * from Recipe_Ingredient ri join Ingredient i on ri.INGREDIENTID = i.ID where ri.RECIPEID = 1;
