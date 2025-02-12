@@ -1,5 +1,6 @@
 ﻿using KuechenQuestAPI.Models;
 using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Crypto.Agreement.JPake;
 using System.Text.Json;
 
 namespace KuechenQuestAPI.Classes
@@ -22,19 +23,93 @@ namespace KuechenQuestAPI.Classes
             try
             {
                 // Datenbankverbindung öffnen
+
+                #region Basisdaten
+                // Basis Daten abfragen
                 this._connection.Open();
-                
-                // Daten abfragen
-                string sql = string.Format(@"SELECT * FROM RECIPE WHERE ID = {0}", id);
+                string sql = string.Format(@"SELECT 
+                                                r.ID,
+                                                r.NAME,
+                                                r.TIME,
+                                                d.NAME as DNAME,
+                                                r.INSTRUCTIONS,
+                                                r.RATING,
+                                                r.RATINGCOUNT,
+                                                r.IMAGE
+                                            FROM Recipe r
+                                            JOIN Difficulty d ON r.DIFFICULTY = d.ID
+                                            WHERE r.ID = {0};", id);
                 MySqlDataReader reader = this.ExecuteQuery(sql);
                 
                 // Ergebniss verarbeiten
+                Recipe recipe = new Recipe();
                 while (reader.Read())
                 {
-                    Recipe recipe = new Recipe();
-                    // Recipe auffüllen
-                    package.Payload = recipe;
+                    recipe.ID = reader.GetInt32("ID");
+                    recipe.NAME = reader.GetString("NAME");
+                    recipe.TIME = reader.GetInt32("TIME");
+                    recipe.DIFFICULTY = reader.GetString("DNAME");
+                    recipe.INSTRUCTIONS = reader.GetString("INSTRUCTIONS");
+                    recipe.RATING = reader.GetInt32("RATING");
+                    recipe.RATINGCOUNT = reader.GetInt32("RATINGCOUNT");
+                    //recipe.IMAGE = reader.GetString("IMAGE");
                 }
+                this._connection.Close();
+                #endregion
+                #region Utensilien
+                this._connection.Open();
+                sql = string.Format(@"SELECT 
+                                        ru.ID,
+                                        ru.RECIPEID,
+                                        ru.UTENSILID,
+                                        u.NAME,
+                                        ru.QUANTITY,
+                                        u.IMAGE
+                                    FROM Recipe_Utensil ru
+                                    JOIN Utensil u ON ru.UTENSILID = u.ID
+                                    WHERE ru.RECIPEID = {0};",id);
+                reader = this.ExecuteQuery(sql);
+
+                while (reader.Read()) 
+                {
+                    Utensil utensil = new Utensil();
+                    utensil.ID = reader.GetInt32("ID");
+                    utensil.NAME = reader.GetString("NAME");
+                    utensil.QUANTITY = reader.GetInt32("QUANTITY");
+
+                    recipe.Utensils.Add(utensil);
+                }
+                this._connection.Close();
+                #endregion
+                #region Zutaten
+                this._connection.Open();
+                sql = string.Format(@"SELECT 
+                                        ri.ID,
+                                        ri.RECIPEID,
+                                        ri.INGREDIENTID,
+                                        i.NAME,
+                                        ri.QUANTITY,
+                                        c.NAME as 'CNAME',
+                                        i.IMAGE
+                                    FROM Recipe_Ingredient ri
+                                    JOIN Ingredient i ON ri.INGREDIENTID = i.ID
+                                    JOIN Category c ON i.CATEGORY = c.ID
+                                    WHERE ri.RECIPEID = {0};",id);
+                reader = this.ExecuteQuery(sql);
+
+                while (reader.Read())
+                {
+                    Ingredient ingredient = new Ingredient();
+                    ingredient.ID = reader.GetInt32("ID");
+                    ingredient.NAME = reader.GetString("NAME");
+                    ingredient.QUANTITY = reader.GetFloat("QUANTITY");
+                    ingredient.CATEGORY = reader.GetString("CNAME");
+
+                    recipe.Ingredients.Add(ingredient);
+                }
+                this._connection.Close();
+                #endregion
+                package.Payload = recipe;
             }
             catch (Exception ex)
             {
@@ -49,6 +124,7 @@ namespace KuechenQuestAPI.Classes
             }
 
             // Datenpaket zurückgebens
+            if (package.Payload == null) { package.Error = true; }
             return package;
         }
         public DataPackage GetAllRecipes() { throw new NotImplementedException(); }
@@ -67,6 +143,8 @@ namespace KuechenQuestAPI.Classes
         public DataPackage CreateIngredient() { throw new NotImplementedException(); }
         public DataPackage DeleteIngredient() { throw new NotImplementedException(); }
         public DataPackage UpdateIngredient() { throw new NotImplementedException(); }
+
+        public DataPackage GetDifficulty() { throw new NotImplementedException(); }
 
 
         public DataPackage GetUser(int UserID)

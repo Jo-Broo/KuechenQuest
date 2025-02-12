@@ -1,6 +1,7 @@
 ﻿using KuechenQuestAPI.Classes;
 using KuechenQuestAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Crypto.Agreement.JPake;
 using System.Text.Json;
 
 namespace KuechenQuestAPI.Controllers
@@ -13,11 +14,25 @@ namespace KuechenQuestAPI.Controllers
         [HttpGet("User/Login/{username}/{password}")]
         public string Login(string username, string password)
         {
-            DataPackage package = new DataPackage();
-            package.Payload = this.database.Login(username, password);
-            if (package.Payload == null) { package.Error = true; }
+            return JsonSerializer.Serialize(this.database.Login(username, password));
+        }
 
-            return JsonSerializer.Serialize(package);
+        [HttpGet("Recipe/Get/{id}")]
+        public string GetRecipe(int id)
+        {
+            return JsonSerializer.Serialize(this.database.GetRecipe(id));
+        }
+
+        [HttpGet("Recipe/Get")]
+        public string GetAllRecipes()
+        {
+            return "";
+        }
+
+        [HttpDelete("Recipe/Delete/{id}")]
+        public string DeleteRecipe(int id) 
+        {
+            return "";
         }
 
         [HttpGet("User/Test/{ID}")]
