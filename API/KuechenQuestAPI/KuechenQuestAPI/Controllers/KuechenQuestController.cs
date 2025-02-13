@@ -26,13 +26,22 @@ namespace KuechenQuestAPI.Controllers
         [HttpGet("Recipe/Get")]
         public string GetAllRecipes()
         {
-            return "";
+            return JsonSerializer.Serialize(this.database.GetAllRecipes());
         }
 
         [HttpDelete("Recipe/Delete/{id}")]
         public string DeleteRecipe(int id) 
         {
-            return "";
+            return JsonSerializer.Serialize(this.database.DeleteRecipe(id));
+        }
+
+        [HttpPost("Recipe/Create/{json}")]
+        public string CreateRecipe(string json)
+        {
+            DataPackage package = JsonSerializer.Deserialize<DataPackage>(json) ?? new DataPackage();
+            Recipe recipe = Recipe.CreateFromJson(package.Payload.ToString());
+
+            return JsonSerializer.Serialize(this.database.CreateRecipe(recipe));
         }
 
         [HttpGet("User/Test/{ID}")]
