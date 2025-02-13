@@ -5,6 +5,9 @@ using System.Text.Json;
 
 namespace KuechenQuestAPI.Classes
 {
+    /// <summary>
+    /// Represents the Connection to the Database
+    /// </summary>
     public class Database
     {
         private MySqlConnection _connection;
@@ -14,6 +17,12 @@ namespace KuechenQuestAPI.Classes
             this._connection = new MySqlConnection(connectionString);
         }
         #region User Functions
+        /// <summary>
+        /// Returns an empty DataPackage and no Error when the Credentials are correct
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public DataPackage Login(string username, string password) 
         {
             DataPackage package = new DataPackage();
@@ -48,7 +57,20 @@ namespace KuechenQuestAPI.Classes
             if (package.Payload == null) { package.Error = true; }
             return package;
         }
+        /// <summary>
+        /// Returns a DataPackage that contains every Achievment of a User
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public DataPackage GetAchievments(string username) { throw new NotImplementedException(); }
+        /// <summary>
+        /// Returns an empty DataPackage and no Error when the User is correctly Registered
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public DataPackage Register(string username, string email, string password) 
         {
             DataPackage package = new DataPackage();
@@ -81,6 +103,11 @@ namespace KuechenQuestAPI.Classes
         #endregion
 
         #region Rezept
+        /// <summary>
+        /// Returns a DataPackage with the corresponding Recipe if one is found
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public DataPackage GetRecipe(int id) 
         {
             // Datenpaket erstellen
@@ -192,6 +219,10 @@ namespace KuechenQuestAPI.Classes
             if (package.Payload == null) { package.Error = true; }
             return package;
         }
+        /// <summary>
+        /// Returns a DataPackage with all Recipes that are saved in the Database
+        /// </summary>
+        /// <returns></returns>
         public DataPackage GetAllRecipes() 
         {
             // Datenpaket erstellen
@@ -305,6 +336,12 @@ namespace KuechenQuestAPI.Classes
             if (package.Payload == null) { package.Error = true; }
             return package;
         }
+        /// <summary>
+        /// Creates a Recipe in the Database with the given Recipe Objekt
+        /// </summary>
+        /// <param name="recipe"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public DataPackage CreateRecipe(Recipe recipe) 
         {
             DataPackage package = new DataPackage();
@@ -377,6 +414,11 @@ namespace KuechenQuestAPI.Classes
             if (package.Payload == null) { package.Error = true; }
             return package;
         }
+        /// <summary>
+        /// Deletes a Recipe with the given ID in the Database
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public DataPackage DeleteRecipe(int id) 
         { 
             DataPackage package = new DataPackage();
@@ -402,6 +444,11 @@ namespace KuechenQuestAPI.Classes
             if (package.Payload == null) { package.Error = true; }
             return package;
         }
+        /// <summary>
+        /// Updates Information of a Recipe 
+        /// </summary>
+        /// <param name="recipe"></param>
+        /// <returns></returns>
         public DataPackage UpdateRecipe(Recipe recipe) 
         { 
             DataPackage package = new DataPackage();
