@@ -13,11 +13,12 @@ namespace KuechenQuestAPI.Models
         public int RATINGCOUNT { get; set; }
         public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
         public List<Utensil> Utensils { get; set; } = new List<Utensil> { };
-        public object? IMAGE { get; set; }
+        public string IMAGE { get; set; } = string.Empty;
 
-        public static Recipe CreateFromJson(string json)
+        public static Recipe CreateFromJson(string? json)
         {
-            return JsonSerializer.Deserialize<Recipe>(json);
+            if(json == null) { return new Recipe(); }
+            return JsonSerializer.Deserialize<Recipe>(json) ?? new Recipe();
         }
     }
 }

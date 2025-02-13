@@ -10,7 +10,7 @@ CREATE TABLE Difficulty(
 CREATE TABLE Utensil(
     ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     NAME VARCHAR(50) NOT NULL,
-    IMAGE LONGBLOB DEFAULT NULL
+    IMAGE VARCHAR(255) DEFAULT NULL
 );
 
 CREATE TABLE Category(
@@ -21,13 +21,13 @@ CREATE TABLE Category(
 CREATE TABLE Achievement( 
     ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     NAME VARCHAR(255) NOT NULL,
-    IMAGE LONGBLOB DEFAULT NULL
+    IMAGE VARCHAR(255) DEFAULT NULL
 );
 
 CREATE TABLE Ingredient(
     ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     NAME VARCHAR(50) NOT NULL,
-    IMAGE LONGBLOB DEFAULT NULL,
+    IMAGE VARCHAR(255) DEFAULT NULL,
     CATEGORY INT NOT NULL,
     CONSTRAINT fk_Category
         FOREIGN KEY (CATEGORY) REFERENCES Category(ID)
@@ -41,7 +41,7 @@ CREATE TABLE Recipe(
     INSTRUCTIONS VARCHAR(500),
     RATING TINYINT DEFAULT 0,
     RATINGCOUNT INT DEFAULT 0,
-    IMAGE LONGBLOB DEFAULT NULL,
+    IMAGE VARCHAR(255) DEFAULT NULL,
     CONSTRAINT fk_Difficulty
         FOREIGN KEY (DIFFICULTY) REFERENCES Difficulty(ID)  
 );
@@ -96,27 +96,27 @@ INSERT INTO User(NAME, EMAIL, PASSWORD) VALUES
 ('Cornelius', 'Cornelius@email.de', 'Admin'),
 ('Jonas', 'Jonas@email.de', 'Admin');
 
-INSERT INTO Utensil (NAME) VALUES 
-('Löffel'),
-('Messer'),
-('Schneidebrett'),
-('Pfanne'),
-('Rührbesen'),
-('Schüssel');
+INSERT INTO Utensil (NAME, IMAGE) VALUES 
+('Löffel', '\\Bilder\\xxx.png'),
+('Messer', '\\Bilder\\xxx.png'),
+('Schneidebrett', '\\Bilder\\xxx.png'),
+('Pfanne', '\\Bilder\\xxx.png'),
+('Rührbesen', '\\Bilder\\xxx.png'),
+('Schüssel', '\\Bilder\\xxx.png');
 
 INSERT INTO Category (NAME) VALUES ('Unkategorisiert'), ('Obst/Gemuese'), ('Fleisch'), ('Milchprodukte');
 
-INSERT INTO Ingredient (NAME, CATEGORY) VALUES 
-('Mehl', 1),
-('Zucker', 1),
-('Eier', 1),
-('Milch', 4),
-('Butter', 4),
-('Tomate', 2);
+INSERT INTO Ingredient (NAME, CATEGORY, IMAGE) VALUES 
+('Mehl', 1, '\\Bilder\\xxx.png'),
+('Zucker', 1, '\\Bilder\\xxx.png'),
+('Eier', 1, '\\Bilder\\xxx.png'),
+('Milch', 4, '\\Bilder\\xxx.png'),
+('Butter', 4, '\\Bilder\\xxx.png'),
+('Tomate', 2, '\\Bilder\\xxx.png');
 
 -- Rezept für Pfannkuchen
-INSERT INTO Recipe(NAME, TIME, DIFFICULTY, INSTRUCTIONS)
-VALUES ('Pfannkuchen',20,2,'Alle Zutaten vermengen und in der Pfanne ausbacken.');
+INSERT INTO Recipe(NAME, TIME, DIFFICULTY, INSTRUCTIONS, IMAGE)
+VALUES ('Pfannkuchen',20,2,'Alle Zutaten vermengen und in der Pfanne ausbacken.', '\\Bilder\\xxx.png');
 -- Zutaten speichern
 INSERT INTO Recipe_Ingredient(RECIPEID, INGREDIENTID, QUANTITY)
 VALUES 

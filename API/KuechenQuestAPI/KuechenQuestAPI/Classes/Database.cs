@@ -13,7 +13,7 @@ namespace KuechenQuestAPI.Classes
         {
             this._connection = new MySqlConnection(connectionString);
         }
-
+        #region User Functions
         public DataPackage Login(string username, string password) 
         {
             DataPackage package = new DataPackage();
@@ -49,7 +49,38 @@ namespace KuechenQuestAPI.Classes
             return package;
         }
         public DataPackage GetAchievments(string username) { throw new NotImplementedException(); }
+        public DataPackage Register(string username, string email, string password) 
+        {
+            DataPackage package = new DataPackage();
+            try
+            {
+                string sql = string.Format(@"INSERT INTO User(NAME,PASSWORD,EMAIL)
+                                             VALUES ('{0}','{1}','{2}');",username,password,email);
+                this._connection.Open();
+                this.ExecuteQuery(sql);
+                this._connection.Close();
 
+                package.Payload = "";
+            }
+            catch (Exception ex)
+            {
+                // Fehler bearbeitung 
+                package.Payload = null;
+                package.Error = ex.Message;
+            }
+            finally
+            {
+                // Datenbankverbindung schließen
+                this._connection.Close();
+            }
+
+            // Datenpaket zurückgebens
+            if (package.Payload == null) { package.Error = true; }
+            return package;
+        }
+        #endregion
+
+        #region Rezept
         public DataPackage GetRecipe(int id) 
         {
             // Datenpaket erstellen
@@ -86,7 +117,7 @@ namespace KuechenQuestAPI.Classes
                     recipe.INSTRUCTIONS = reader.GetString("INSTRUCTIONS");
                     recipe.RATING = reader.GetInt32("RATING");
                     recipe.RATINGCOUNT = reader.GetInt32("RATINGCOUNT");
-                    //recipe.IMAGE = reader.GetString("IMAGE");
+                    recipe.IMAGE = reader.GetString("IMAGE");
                 }
                 this._connection.Close();
                 #endregion
@@ -109,7 +140,7 @@ namespace KuechenQuestAPI.Classes
                     Utensil utensil = new Utensil();
                     utensil.ID = reader.GetInt32("ID");
                     utensil.NAME = reader.GetString("NAME");
-                    utensil.QUANTITY = reader.GetInt32("QUANTITY");
+                    utensil.QUANTITY = reader.GetFloat("QUANTITY");
 
                     recipe.Utensils.Add(utensil);
                 }
@@ -123,7 +154,7 @@ namespace KuechenQuestAPI.Classes
                                         ri.INGREDIENTID,
                                         i.NAME,
                                         ri.QUANTITY,
-                                        c.NAME as 'CNAME',
+                                        i.CATEGORY,
                                         i.IMAGE
                                     FROM Recipe_Ingredient ri
                                     JOIN Ingredient i ON ri.INGREDIENTID = i.ID
@@ -137,7 +168,7 @@ namespace KuechenQuestAPI.Classes
                     ingredient.ID = reader.GetInt32("ID");
                     ingredient.NAME = reader.GetString("NAME");
                     ingredient.QUANTITY = reader.GetFloat("QUANTITY");
-                    ingredient.CATEGORY = reader.GetString("CNAME");
+                    ingredient.CATEGORY = reader.GetInt32("CATEGORY");
 
                     recipe.Ingredients.Add(ingredient);
                 }
@@ -197,8 +228,8 @@ namespace KuechenQuestAPI.Classes
                     recipe.INSTRUCTIONS = reader.GetString("INSTRUCTIONS");
                     recipe.RATING = reader.GetInt32("RATING");
                     recipe.RATINGCOUNT = reader.GetInt32("RATINGCOUNT");
+                    recipe.IMAGE = reader.GetString("IMAGE");
                     recipes.Add(recipe);
-                    //recipe.IMAGE = reader.GetString("IMAGE");
                 }
                 this._connection.Close();
                 #endregion
@@ -235,7 +266,7 @@ namespace KuechenQuestAPI.Classes
                                                                 ri.INGREDIENTID,
                                                                 i.NAME,
                                                                 ri.QUANTITY,
-                                                                c.NAME as 'CNAME',
+                                                                c.ID as 'CID',
                                                                 i.IMAGE
                                                             FROM Recipe_Ingredient ri
                                                             JOIN Ingredient i ON ri.INGREDIENTID = i.ID
@@ -248,7 +279,7 @@ namespace KuechenQuestAPI.Classes
                         ingredient.ID = reader.GetInt32("ID");
                         ingredient.NAME = reader.GetString("NAME");
                         ingredient.QUANTITY = reader.GetFloat("QUANTITY");
-                        ingredient.CATEGORY = reader.GetString("CNAME");
+                        ingredient.CATEGORY = reader.GetInt32("CID");
 
                         recipe.Ingredients.Add(ingredient);
                     }
@@ -286,11 +317,12 @@ namespace KuechenQuestAPI.Classes
                 }
                 
                 string sql = string.Format(@"INSERT INTO 
-                                             Recipe(NAME, TIME, DIFFICULTY, INSTRUCTIONS)
+                                             Recipe(NAME, TIME, DIFFICULTY, INSTRUCTIONS, IMAGE)
                                              VALUES ('{0}',
                                                       {1},
                                                       {2},
-                                                      '{3}');",recipe.NAME,recipe.TIME,recipe.DIFFICULTY,recipe.INSTRUCTIONS);
+                                                      '{3}',
+                                                      '{4}');",recipe.NAME,recipe.TIME,recipe.DIFFICULTY,recipe.INSTRUCTIONS,recipe.IMAGE);
                 this._connection.Open();
                 MySqlDataReader reader = this.ExecuteQuery(sql);
                 this._connection.Close();
@@ -370,22 +402,404 @@ namespace KuechenQuestAPI.Classes
             if (package.Payload == null) { package.Error = true; }
             return package;
         }
-        public DataPackage UpdateRecipe(Recipe recipe) { throw new NotImplementedException(); }
+        public DataPackage UpdateRecipe(Recipe recipe) 
+        { 
+            DataPackage package = new DataPackage();
+            try
+            {
+                string sql = string.Format(@"UPDATE Recipe 
+                                             SET 
+                                             NAME = '{0}',
+                                             TIME = {1},
+                                             DIFFICULTY = {2},
+                                             INSTRUCTIONS = '{3}',
+                                             RATING = {4},
+                                             RATINGCOUNT = {5},
+                                             IMAGE = {6}
+                                             WHERE
+                                             ID = {7};", recipe.NAME,recipe.TIME,recipe.DIFFICULTY,recipe.INSTRUCTIONS,recipe.RATING,recipe.RATINGCOUNT,recipe.IMAGE,recipe.ID);
+                this._connection.Open();
+                this.ExecuteQuery(sql);
+                this._connection.Close();
 
-        public DataPackage GetUtensil(int id) { throw new NotImplementedException(); }
-        public DataPackage GetAllUtensils() { throw new NotImplementedException(); }
-        public DataPackage CreateUtensil() {  throw new NotImplementedException(); }
-        public DataPackage DeleteUntensil(int id) { throw new NotImplementedException(); }
-        public DataPackage UpdateUtensil(Utensil utensil) { throw new NotImplementedException(); }
+                package.Payload = "";
+            }
+            catch (Exception ex)
+            {
+                // Fehler bearbeitung 
+                package.Payload = null;
+                package.Error = ex.Message;
+            }
+            finally
+            {
+                // Datenbankverbindung schließen
+                this._connection.Close();
+            }
 
-        public DataPackage GetIngredient(int id) { throw new NotImplementedException(); }
-        public DataPackage GetAllIngredients() { throw new NotImplementedException(); }
-        public DataPackage CreateIngredient() { throw new NotImplementedException(); }
-        public DataPackage DeleteIngredient(int id) { throw new NotImplementedException(); }
-        public DataPackage UpdateIngredient() { throw new NotImplementedException(); }
+            // Datenpaket zurückgebens
+            if (package.Payload == null) { package.Error = true; }
+            return package;
+        }
+        #endregion
+
+        #region Utensil
+        public DataPackage GetUtensil(int id) 
+        {
+            DataPackage package = new DataPackage();
+            try
+            {
+                string sql = string.Format(@"SELECT 
+                                             ID,
+                                             NAME,
+                                             IMAGE
+                                             FROM Utensil
+                                             WHERE ID = {0}",id);
+                this._connection.Open();
+                MySqlDataReader reader = this.ExecuteQuery(sql);
+                while (reader.Read()) 
+                {
+                    Utensil utensil = new Utensil();
+                    utensil.ID = reader.GetInt32("ID");
+                    utensil.NAME = reader.GetString("NAME");
+                    utensil.IMAGE = reader.GetString("image");
+                    package.Payload = utensil;
+                    break;
+                }
+                this._connection.Close();
+            }
+            catch (Exception ex)
+            {
+                // Fehler bearbeitung 
+                package.Payload = null;
+                package.Error = ex.Message;
+            }
+            finally
+            {
+                // Datenbankverbindung schließen
+                this._connection.Close();
+            }
+
+            // Datenpaket zurückgebens
+            if (package.Payload == null) { package.Error = true; }
+            return package;
+        }
+        public DataPackage GetAllUtensils() 
+        {
+            DataPackage package = new DataPackage();
+            try
+            {
+                List<Utensil> utensils = new List<Utensil>();
+                string sql = string.Format(@"SELECT 
+                                             ID,
+                                             NAME,
+                                             IMAGE
+                                             FROM Utensil");
+                this._connection.Open();
+                
+                MySqlDataReader reader = this.ExecuteQuery(sql);
+                while (reader.Read())
+                {
+                    Utensil utensil = new Utensil();
+                    utensil.ID = reader.GetInt32("ID");
+                    utensil.NAME = reader.GetString("NAME");
+                    utensil.IMAGE = reader.GetString("image");
+
+                    utensils.Add(utensil);
+                }
+                this._connection.Close();
+                package.Payload = utensils;
+            }
+            catch (Exception ex)
+            {
+                // Fehler bearbeitung 
+                package.Payload = null;
+                package.Error = ex.Message;
+            }
+            finally
+            {
+                // Datenbankverbindung schließen
+                this._connection.Close();
+            }
+
+            // Datenpaket zurückgebens
+            if (package.Payload == null) { package.Error = true; }
+            return package;
+        }
+        public DataPackage CreateUtensil(Utensil utensil) 
+        {
+            DataPackage package = new DataPackage();
+            try
+            {
+                string sql = string.Format(@"INSERT INTO 
+                                             Utensil(NAME,IMAGE)
+                                             VALUES
+                                             ('{0}',{1})",utensil.NAME,utensil.IMAGE);
+                this._connection.Open();
+                this.ExecuteQuery(sql);
+                this._connection.Close();
+
+                package.Payload = "";
+            }
+            catch (Exception ex)
+            {
+                // Fehler bearbeitung 
+                package.Payload = null;
+                package.Error = ex.Message;
+            }
+            finally
+            {
+                // Datenbankverbindung schließen
+                this._connection.Close();
+            }
+
+            // Datenpaket zurückgebens
+            if (package.Payload == null) { package.Error = true; }
+            return package;
+        }
+        public DataPackage DeleteUntensil(int id) 
+        {
+            DataPackage package = new DataPackage();
+            try
+            {
+                string sql = string.Format(@"DELETE FROM Utensil WHERE ID = {0};",id);
+                this._connection.Open();
+                this.ExecuteQuery(sql);
+                this._connection.Close();
+
+                package.Payload = "";
+            }
+            catch (Exception ex)
+            {
+                // Fehler bearbeitung 
+                package.Payload = null;
+                package.Error = ex.Message;
+            }
+            finally
+            {
+                // Datenbankverbindung schließen
+                this._connection.Close();
+            }
+
+            // Datenpaket zurückgebens
+            if (package.Payload == null) { package.Error = true; }
+            return package;
+        }
+        public DataPackage UpdateUtensil(Utensil utensil) 
+        {
+            DataPackage package = new DataPackage();
+            try
+            {
+                string sql = string.Format(@"UPDATE Utensil
+                                             SET NAME = '{0}',
+                                             IMAGE = '{1}'
+                                             WHERE ID = {2};",utensil.NAME,utensil.IMAGE,utensil.ID);
+                this._connection.Open();
+                this.ExecuteQuery(sql);
+                this._connection.Close();
+
+                package.Payload = "";
+            }
+            catch (Exception ex)
+            {
+                // Fehler bearbeitung 
+                package.Payload = null;
+                package.Error = ex.Message;
+            }
+            finally
+            {
+                // Datenbankverbindung schließen
+                this._connection.Close();
+            }
+
+            // Datenpaket zurückgebens
+            if (package.Payload == null) { package.Error = true; }
+            return package;
+        }
+        #endregion
+
+        #region Zutaten
+        public DataPackage GetIngredient(int id) 
+        {
+            DataPackage package = new DataPackage();
+            try
+            {
+                string sql = string.Format(@"SELECT
+                                             ID,
+                                             NAME,
+                                             IMAGE,
+                                             CATEGORY
+                                             FROM Ingredient
+                                             WHERE ID = {0};",id);
+                this._connection.Open();
+                MySqlDataReader reader = this.ExecuteQuery(sql);
+                while (reader.Read()) 
+                {
+                    Ingredient ingredient = new Ingredient();
+                    ingredient.ID = reader.GetInt32("ID");
+                    ingredient.NAME = reader.GetString("NAME");
+                    ingredient.IMAGE = reader.GetString("IMAGE");
+                    ingredient.CATEGORY = reader.GetInt32("CATEGORY");
+
+                    package.Payload = ingredient;
+                    break;
+                }
+                this._connection.Close();
+            }
+            catch (Exception ex)
+            {
+                // Fehler bearbeitung 
+                package.Payload = null;
+                package.Error = ex.Message;
+            }
+            finally
+            {
+                // Datenbankverbindung schließen
+                this._connection.Close();
+            }
+
+            // Datenpaket zurückgebens
+            if (package.Payload == null) { package.Error = true; }
+            return package;
+        }
+        public DataPackage GetAllIngredients() 
+        {
+            DataPackage package = new DataPackage();
+            try
+            {
+                List<Ingredient> Ingredients = new List<Ingredient>();
+
+                string sql = string.Format(@"SELECT
+                                             ID,
+                                             NAME,
+                                             IMAGE,
+                                             CATEGORY
+                                             FROM Ingredient");
+                this._connection.Open();
+                MySqlDataReader reader = this.ExecuteQuery(sql);
+                while (reader.Read())
+                {
+                    Ingredient ingredient = new Ingredient();
+                    ingredient.ID = reader.GetInt32("ID");
+                    ingredient.NAME = reader.GetString("NAME");
+                    ingredient.IMAGE = reader.GetString("IMAGE");
+                    ingredient.CATEGORY = reader.GetInt32("CATEGORY");
+
+                    Ingredients.Add(ingredient);
+                }
+                this._connection.Close();
+
+                package.Payload = Ingredients;
+            }
+            catch (Exception ex)
+            {
+                // Fehler bearbeitung 
+                package.Payload = null;
+                package.Error = ex.Message;
+            }
+            finally
+            {
+                // Datenbankverbindung schließen
+                this._connection.Close();
+            }
+
+            // Datenpaket zurückgebens
+            if (package.Payload == null) { package.Error = true; }
+            return package;
+        }
+        public DataPackage CreateIngredient(Ingredient ingredient)
+        {
+            DataPackage package = new DataPackage();
+            try
+            {
+                string sql = string.Format(@"INSERT INTO 
+                                             Ingredient(NAME,IMAGE,CATEGORY)
+                                             VALUES ('{0}','{1}',{2})",ingredient.NAME,ingredient.IMAGE,ingredient.CATEGORY);
+                this._connection.Open();
+                this.ExecuteQuery(sql);
+                this._connection.Close();
+
+                package.Payload = "";
+            }
+            catch (Exception ex)
+            {
+                // Fehler bearbeitung 
+                package.Payload = null;
+                package.Error = ex.Message;
+            }
+            finally
+            {
+                // Datenbankverbindung schließen
+                this._connection.Close();
+            }
+
+            // Datenpaket zurückgebens
+            if (package.Payload == null) { package.Error = true; }
+            return package;
+        }
+        public DataPackage DeleteIngredient(int id) 
+        {
+            DataPackage package = new DataPackage();
+            try
+            {
+                string sql = string.Format(@"DELETE FROM Ingredient WHERE ID = {0}",id);
+                this._connection.Open();
+                this.ExecuteQuery(sql);
+                this._connection.Close();
+
+                package.Payload = "";
+            }
+            catch (Exception ex)
+            {
+                // Fehler bearbeitung 
+                package.Payload = null;
+                package.Error = ex.Message;
+            }
+            finally
+            {
+                // Datenbankverbindung schließen
+                this._connection.Close();
+            }
+
+            // Datenpaket zurückgebens
+            if (package.Payload == null) { package.Error = true; }
+            return package;
+        }
+        public DataPackage UpdateIngredient(Ingredient ingredient) 
+        {
+            DataPackage package = new DataPackage();
+            try
+            {
+                string sql = string.Format(@"UPDATE Ingredient 
+                                             SET NAME = '{0}',
+                                             CATEGORY = {1},
+                                             IMAGE = '{2}'
+                                             WHERE ID = {3}",ingredient.NAME,ingredient.CATEGORY,ingredient.IMAGE,ingredient.ID);
+                this._connection.Open();
+                this.ExecuteQuery(sql);
+                this._connection.Close();
+
+                package.Payload = "";
+            }
+            catch (Exception ex)
+            {
+                // Fehler bearbeitung 
+                package.Payload = null;
+                package.Error = ex.Message;
+            }
+            finally
+            {
+                // Datenbankverbindung schließen
+                this._connection.Close();
+            }
+
+            // Datenpaket zurückgebens
+            if (package.Payload == null) { package.Error = true; }
+            return package;
+        }
+        #endregion
 
         public DataPackage GetDifficulty() { throw new NotImplementedException(); }
-
+        public DataPackage GetCategory() { throw new NotImplementedException(); }
 
         public DataPackage GetUser(int UserID)
         {
