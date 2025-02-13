@@ -11,7 +11,7 @@ public static class MauiProgram
 			.UseMauiApp<App>()
 			.ConfigureFonts(fonts =>
 			{
-				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+				fonts.AddFont("ComicSansMS.ttf", "ComicSansMS");
 			});
 
 		builder.Services.AddMauiBlazorWebView();

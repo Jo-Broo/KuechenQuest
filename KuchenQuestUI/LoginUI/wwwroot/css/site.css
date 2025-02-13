@@ -113,3 +113,98 @@ button {
         transform: translateY(0);
     }
 }
+
+/*CSS For Homepage*/
+
+/* Allgemeines Styling */
+.container {
+    width: 100vw;
+    height: 100vh;
+    background: #2f2f48;
+    color: white;
+    padding: 10px;
+}
+
+.top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #3e3e5a;
+    padding: 10px;
+    width: auto;
+    border-radius: 10px;
+}
+
+.menu-btn img {
+    width: 30px;
+}
+
+.search-bar {
+    flex: 1;
+    margin: 0 10px;
+    width: auto;
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+}
+
+.recipe-list {
+    margin: 10px;
+}
+
+.recipe-card {
+    background: #4a4a69;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+/* Sidebar (kommt zur Hälfte ins Bild) */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -50%; /* Schiebt die Sidebar ganz aus dem Bildschirm */
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to bottom, #4CAF50, #3C3C5A);
+    transition: left 0.3s ease-in-out; /* Nur left animieren */
+    padding: 15px;
+    box-shadow: 3px 0px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 0 10px 10px 0;
+}
+
+.close-btn {
+    background: red;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    padding: 5px;
+    cursor: pointer;
+    align-self: flex-end;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+    .sidebar ul li {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        font-size: 1.2rem;
+        color: white;
+        cursor: pointer;
+    }
+
+        .sidebar ul li img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: white;
+        }
