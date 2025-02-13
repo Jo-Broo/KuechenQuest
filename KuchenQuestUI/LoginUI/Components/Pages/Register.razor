@@ -1,0 +1,30 @@
+@page "/register"
+
+@inject NavigationManager Navigation
+
+<div class="container">
+    <img src="images/logo.png" alt="KüchenQuest Logo" class="logo">
+    <h1>KüchenQuest</h1>
+    <div class="input-group">
+        <input type="email" @bind="Email" placeholder="Email">
+    </div>
+    <div class="input-group">
+        <input type="text" @bind="Username" placeholder="Anmeldename">
+    </div>
+    <div class="input-group">
+        <input type="password" @bind="Password" placeholder="Passwort">
+    </div>
+    <button class="register-btn" @onclick="OnRegister">Registrieren</button>
+</div>
+
+@code {
+    private string Email { get; set; } = "";
+    private string Username { get; set; } = "";
+    private string Password { get; set; } = "";
+
+    private void OnRegister()
+    {
+        Console.WriteLine($"Registrierung mit: {Email}, {Username}");
+        Navigation.NavigateTo("/login"); // Nach Registrierung zur Login-Seite
+    }
+}
