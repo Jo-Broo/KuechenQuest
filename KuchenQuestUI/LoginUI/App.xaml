@@ -5,13 +5,7 @@
              x:Class="LoginUI.App">
     <Application.Resources>
         <ResourceDictionary>
-
-        <!--
-            For information about styling .NET MAUI pages
-            please refer to the documentation:
-            https://go.microsoft.com/fwlink/?linkid=2282329
-        -->
-
+            <!-- Hier können Stile und Ressourcen für das gesamte Projekt definiert werden -->
         </ResourceDictionary>
     </Application.Resources>
 </Application>

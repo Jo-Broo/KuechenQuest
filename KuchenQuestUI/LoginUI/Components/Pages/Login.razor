@@ -1,6 +1,11 @@
 @page "/login"
 
+@inject HttpClient Http
 @inject NavigationManager Navigation
+@using System.Net.Http.Json
+
+<!-- CSS sicherstellen -->
+<link rel="stylesheet" href="css/site.css">
 
 <div class="container">
     <img src="images/logo.png" alt="KüchenQuest Logo" class="logo">
@@ -16,23 +21,72 @@
         <button class="register-btn" @onclick="Register">Registrieren</button>
     </div>
     <a href="#" class="guest-link">Als Gast anmelden</a>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+            <p style="color: red; margin-top: 10px;">@ErrorMessage</p>
+    }
 </div>
 
 @code {
     private string Username { get; set; } = "";
     private string Password { get; set; } = "";
+    private string ErrorMessage { get; set; } = "";
 
-    private void OnLogin()
+    private async Task OnLogin()
     {
-        Console.WriteLine($"Login mit Benutzer: {Username}");
-        // Hier kannst du später eine Authentifizierung einbauen
+        // Überprüfen, ob der Benutzername und das Passwort nicht leer sind
+        if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
+        {
+            ErrorMessage = "Benutzername und Passwort dürfen nicht leer sein.";
+            return;
+        }
 
-        // Nach dem erfolgreichen Login zur Startseite weiterleiten
-        Navigation.NavigateTo("/");
+        try
+        {
+            // Sende den GET-Request an den API-Endpunkt mit den Anmeldedaten in der URL
+            string url = $"https://192.168.50.240:7067/KuechenQuest/User/Login/{Username}/{Password}";
+            var response = await Http.GetAsync(url);
+
+            // Statuscode der Antwort prüfen
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<DataPackage>();
+
+                if (result?.Payload != null)
+                {
+                    // Erfolgreiches Login
+                    Console.WriteLine("Login erfolgreich!");
+                    // Weiterleitung nach dem erfolgreichen Login
+                    Navigation.NavigateTo("/start");
+                }
+                else
+                {
+                    // Fehler, wenn die Anmeldedaten nicht korrekt sind
+                    ErrorMessage = "Falscher Benutzername oder Passwort.";
+                }
+            }
+            else
+            {
+                // Fehler bei der API-Anfrage
+                ErrorMessage = "Fehler beim Anmelden. Bitte versuche es später.";
+            }
+        }
+        catch (Exception ex)
+        {
+            // Fehlerbehandlung bei Verbindungsproblemen
+            ErrorMessage = "Verbindungsfehler: " + ex.Message;
+        }
     }
+
     private void Register()
     {
-        Navigation.NavigateTo("/register");
+        Navigation.NavigateTo("/");
     }
 
+    public class DataPackage
+    {
+        public object? Payload { get; set; }
+        public bool Error { get; set; } = false;
+    }
 }
