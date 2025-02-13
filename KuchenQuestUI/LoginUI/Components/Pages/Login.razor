@@ -1,0 +1,38 @@
+@page "/login"
+
+@inject NavigationManager Navigation
+
+<div class="container">
+    <img src="images/logo.png" alt="KüchenQuest Logo" class="logo">
+    <h1>KüchenQuest</h1>
+    <div class="input-group">
+        <input type="text" @bind="Username" placeholder="Anmeldename">
+    </div>
+    <div class="input-group">
+        <input type="password" @bind="Password" placeholder="Passwort">
+    </div>
+    <div class="button-group">
+        <button class="login-btn" @onclick="OnLogin">Login</button>
+        <button class="register-btn" @onclick="Register">Registrieren</button>
+    </div>
+    <a href="#" class="guest-link">Als Gast anmelden</a>
+</div>
+
+@code {
+    private string Username { get; set; } = "";
+    private string Password { get; set; } = "";
+
+    private void OnLogin()
+    {
+        Console.WriteLine($"Login mit Benutzer: {Username}");
+        // Hier kannst du später eine Authentifizierung einbauen
+
+        // Nach dem erfolgreichen Login zur Startseite weiterleiten
+        Navigation.NavigateTo("/");
+    }
+    private void Register()
+    {
+        Navigation.NavigateTo("/register");
+    }
+
+}
