@@ -61,7 +61,7 @@ CREATE TABLE Recipe_Ingredient(
     INGREDIENTID INT NOT NULL,
     QUANTITY FLOAT NOT NULL,
     CONSTRAINT fk_I_RecipeID
-        FOREIGN KEY (RECIPEID) REFERENCES Recipe(ID),
+        FOREIGN KEY (RECIPEID) REFERENCES Recipe(ID) ON DELETE CASCADE,
     CONSTRAINT fk_IngredientID
         FOREIGN KEY (INGREDIENTID) REFERENCES Ingredient(ID)
 );
@@ -72,7 +72,7 @@ CREATE TABLE Recipe_Utensil(
     UTENSILID INT NOT NULL,
     QUANTITY INT NOT NULL,
     CONSTRAINT fk_U_RecipeID
-        FOREIGN KEY (RECIPEID) REFERENCES Recipe(ID),
+        FOREIGN KEY (RECIPEID) REFERENCES Recipe(ID) ON DELETE CASCADE,
     CONSTRAINT fk_UtensilID
         FOREIGN KEY (UTENSILID) REFERENCES Utensil(ID)
 );
@@ -110,8 +110,9 @@ INSERT INTO Ingredient (NAME, CATEGORY) VALUES
 ('Mehl', 1),
 ('Zucker', 1),
 ('Eier', 1),
-('Milch', 3),
-('Butter', 3);
+('Milch', 4),
+('Butter', 4),
+('Tomate', 2);
 
 -- Rezept für Pfannkuchen
 INSERT INTO Recipe(NAME, TIME, DIFFICULTY, INSTRUCTIONS)
