@@ -10,19 +10,19 @@ namespace KuechenQuestAPI.Controllers
     {
         private Database database = new Database("SERVER=localhost;DATABASE=KuechenQuest;UID=root;PASSWORD=;");
 
-        [HttpGet("{id}")]
-        public IActionResult GetRecipe(int id)
-        {
-            Recipe? result = this.database.GetRecipe(id);
-            if (result == null) { return new StatusCodeResult(500); }
-            return Ok(JsonSerializer.Serialize(result));
-        }
-
         [HttpGet]
         public IActionResult GetRecipes()
         {
             List<Recipe> result = this.database.GetAllRecipes();
             if (result.Count == 0) { return new StatusCodeResult(500); }
+            return Ok(JsonSerializer.Serialize(result));
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetRecipe(int id)
+        {
+            Recipe? result = this.database.GetRecipeByID(id);
+            if (result == null) { return new StatusCodeResult(500); }
             return Ok(JsonSerializer.Serialize(result));
         }
 
@@ -37,12 +37,16 @@ namespace KuechenQuestAPI.Controllers
         [HttpPut]
         public IActionResult UpdateRecipe([FromBody] Recipe recipe)
         {
-            return Ok();
+            Recipe? result = this.database.UpdateRecipe(recipe);
+            if (result == null) { return new StatusCodeResult(500); }
+            return Ok(JsonSerializer.Serialize(result));
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteRecipe(int id)
         {
+            bool result = this.database.DeleteRecipeByID(id);
+            if (result == false) { return new StatusCodeResult(500); }
             return Ok();
         }
     }
