@@ -1,5 +1,6 @@
 ﻿using KuechenQuestAPI.Classes;
 using KuechenQuestAPI.Models;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Crypto.Agreement.JPake;
 using System.Text.Json;
@@ -12,19 +13,6 @@ namespace KuechenQuestAPI.Controllers
         private Database database = new Database("SERVER=localhost;DATABASE=KuechenQuest;UID=root;PASSWORD=;");
 
         #region Endpoints
-
-        #region User
-        [HttpGet("User/Login/{username}/{password}")]
-        public string Login(string username, string password)
-        {
-            return JsonSerializer.Serialize(this.database.Login(username, password));
-        }
-        [HttpPost("User/Register/{username}/{email}/{password}")]
-        public string Register(string username, string email, string password)
-        {
-            return JsonSerializer.Serialize(this.database.Register(username, email, password));
-        }
-        #endregion
 
         #region Rezept
         [HttpGet("Recipe/Get/{id}")]
@@ -39,13 +27,13 @@ namespace KuechenQuestAPI.Controllers
             return JsonSerializer.Serialize(this.database.GetAllRecipes());
         }
 
-        [HttpDelete("Recipe/Delete/{id}")]
+        [HttpGet("Recipe/Delete/{id}")]
         public string DeleteRecipe(int id) 
         {
             return JsonSerializer.Serialize(this.database.DeleteRecipe(id));
         }
 
-        [HttpPost("Recipe/Create/{json}")]
+        [HttpGet("Recipe/Create/{json}")]
         public string CreateRecipe(string json)
         {
             DataPackage package = JsonSerializer.Deserialize<DataPackage>(json) ?? new DataPackage();
@@ -54,7 +42,7 @@ namespace KuechenQuestAPI.Controllers
             return JsonSerializer.Serialize(this.database.CreateRecipe(recipe));
         }
 
-        [HttpPut("Recipe/Update/{json}")]
+        [HttpGet("Recipe/Update/{json}")]
         public string UpdateRecipe(string json)
         {
             DataPackage package = JsonSerializer.Deserialize<DataPackage>(json) ?? new DataPackage();
@@ -80,7 +68,7 @@ namespace KuechenQuestAPI.Controllers
         //{ 
         //    return JsonSerializer.Serialize(this.database.DeleteUntensil(id));
         //}
-        [HttpPost("Utensil/Create/{json}")]
+        [HttpGet("Utensil/Create/{json}")]
         public string CreateUtensil(string json) 
         { 
             DataPackage package = JsonSerializer.Deserialize<DataPackage>(json) ?? new DataPackage();
@@ -88,7 +76,7 @@ namespace KuechenQuestAPI.Controllers
 
             return JsonSerializer.Serialize(this.database.CreateUtensil(utensil)); 
         }
-        [HttpPut("Utensil/Update/{json}")]
+        [HttpGet("Utensil/Update/{json}")]
         public string UpdateUtensil(string json) 
         {
             DataPackage package = JsonSerializer.Deserialize<DataPackage>(json) ?? new DataPackage();
@@ -114,7 +102,7 @@ namespace KuechenQuestAPI.Controllers
         //{
         //    return JsonSerializer.Serialize(this.database.DeleteIngredient(id));
         //}
-        [HttpPost("Ingredient/Create/{json}")]
+        [HttpGet("Ingredient/Create/{json}")]
         public string CreateIngredient(string json)
         {
             DataPackage package = JsonSerializer.Deserialize<DataPackage>(json) ?? new DataPackage();
@@ -122,7 +110,7 @@ namespace KuechenQuestAPI.Controllers
 
             return JsonSerializer.Serialize(this.database.CreateIngredient(ingredient));
         }
-        [HttpPut("Ingredient/Update/{json}")]
+        [HttpGet("Ingredient/Update/{json}")]
         public string UpdateIngredient(string json)
         {
             DataPackage package = JsonSerializer.Deserialize<DataPackage>(json) ?? new DataPackage();

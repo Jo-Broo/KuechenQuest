@@ -23,29 +23,29 @@ namespace KuechenQuestAPI.Classes
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public DataPackage Login(string username, string password) 
+        public User? Login(string username, string password) 
         {
-            DataPackage package = new DataPackage();
+            User? user = new User();
             try
             {
-                string sql = string.Format(@"select ID from user where NAME = '{0}' AND PASSWORD = '{1}';",username,password);
+                string sql = string.Format(@"select * from user where NAME = '{0}' AND PASSWORD = '{1}';",username,password);
                 this._connection.Open();
                 MySqlDataReader reader = this.ExecuteQuery(sql);
-                int i = 0;
                 while (reader.Read()) 
                 {
-                    i = reader.GetInt32("ID");
+                    user = new User();
+                    user.ID = reader.GetInt32("ID");
+                    user.NAME = reader.GetString("NAME");
+                    user.LEVEL = reader.GetInt32("LEVEL");
+                    user.XP = reader.GetInt32("XP");
+                    user.EMAIL = reader.GetString("EMAIL");
+                    break;
                 }
                 this._connection.Close();
-
-                if (i == 0) { package.Payload = null; }
-                else { package.Payload = ""; }
             }
             catch (Exception ex)
             {
-                // Fehler bearbeitung 
-                package.Payload = null;
-                package.Error = ex.Message;
+                user = null;
             }
             finally
             {
@@ -53,9 +53,7 @@ namespace KuechenQuestAPI.Classes
                 this._connection.Close();
             }
 
-            // Datenpaket zurückgebens
-            if (package.Payload == null) { package.Error = true; }
-            return package;
+            return user;
         }
         /// <summary>
         /// Returns a DataPackage that contains every Achievment of a User
@@ -64,31 +62,55 @@ namespace KuechenQuestAPI.Classes
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         public DataPackage GetAchievments(string username) { throw new NotImplementedException(); }
-        /// <summary>
-        /// Returns an empty DataPackage and no Error when the User is correctly Registered
-        /// </summary>
-        /// <param name="username"></param>
-        /// <param name="email"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
-        public DataPackage Register(string username, string email, string password) 
+
+        public User? Register(string username, string email, string password)
         {
-            DataPackage package = new DataPackage();
+            User? user = null;
             try
             {
-                string sql = string.Format(@"INSERT INTO User(NAME,PASSWORD,EMAIL)
-                                             VALUES ('{0}','{1}','{2}');",username,password,email);
+                string sql = string.Format(@"INSERT INTO 
+                                                User(NAME,PASSWORD,EMAIL)
+                                             VALUES 
+                                                ('{0}','{1}','{2}');", username, password, email);
                 this._connection.Open();
                 this.ExecuteQuery(sql);
                 this._connection.Close();
-
-                package.Payload = "";
+                user = this.GetUser(this.GetLastInsertedID());
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Fehler bearbeitung 
-                package.Payload = null;
-                package.Error = ex.Message;
+                user = null;
+            }
+            finally
+            {
+                this._connection.Close();
+            }
+
+            return user;
+        }
+
+        public User? GetUser(int id)
+        {
+            User? user = new User();
+            try
+            {
+                string sql = string.Format(@"SELECT * FROM User WHERE ID = {0}",id);
+                this._connection.Open();
+                // Benutzer abfragen
+                MySqlDataReader reader = this.ExecuteQuery(sql);
+                while (reader.Read())
+                {
+                    user.ID = reader.GetInt32("ID");
+                    user.NAME = reader.GetString("NAME");
+                    user.LEVEL = reader.GetInt32("LEVEL");
+                    user.XP = reader.GetInt32("XP");
+                    user.EMAIL = reader.GetString("EMAIL");
+                }
+                this._connection.Close();
+            }
+            catch (Exception)
+            {
+                user = null;
             }
             finally
             {
@@ -96,9 +118,7 @@ namespace KuechenQuestAPI.Classes
                 this._connection.Close();
             }
 
-            // Datenpaket zurückgebens
-            if (package.Payload == null) { package.Error = true; }
-            return package;
+            return user;
         }
         #endregion
 
@@ -689,6 +709,11 @@ namespace KuechenQuestAPI.Classes
         #endregion
 
         #region Zutaten
+        /// <summary>
+        /// Returns a DataPackage with the corresponding Ingredient if one is found
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public DataPackage GetIngredient(int id) 
         {
             DataPackage package = new DataPackage();
@@ -732,6 +757,10 @@ namespace KuechenQuestAPI.Classes
             if (package.Payload == null) { package.Error = true; }
             return package;
         }
+        /// <summary>
+        /// Returns a DataPackage with all Ingredients that are saved in the Database
+        /// </summary>
+        /// <returns></returns>
         public DataPackage GetAllIngredients() 
         {
             DataPackage package = new DataPackage();
@@ -777,6 +806,11 @@ namespace KuechenQuestAPI.Classes
             if (package.Payload == null) { package.Error = true; }
             return package;
         }
+        /// <summary>
+        /// Creates a Ingredient in the Database with the given Recipe Objekt
+        /// </summary>
+        /// <param name="recipe"></param>
+        /// <returns></returns>
         public DataPackage CreateIngredient(Ingredient ingredient)
         {
             DataPackage package = new DataPackage();
@@ -807,6 +841,11 @@ namespace KuechenQuestAPI.Classes
             if (package.Payload == null) { package.Error = true; }
             return package;
         }
+        /// <summary>
+        /// Deletes a Ingredient with the given ID in the Database
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public DataPackage DeleteIngredient(int id) 
         {
             DataPackage package = new DataPackage();
@@ -835,6 +874,11 @@ namespace KuechenQuestAPI.Classes
             if (package.Payload == null) { package.Error = true; }
             return package;
         }
+        /// <summary>
+        /// Updates Information of a Ingredient 
+        /// </summary>
+        /// <param name="recipe"></param>
+        /// <returns></returns>
         public DataPackage UpdateIngredient(Ingredient ingredient) 
         {
             DataPackage package = new DataPackage();
@@ -868,45 +912,88 @@ namespace KuechenQuestAPI.Classes
             return package;
         }
         #endregion
-
-        public DataPackage GetDifficulty() { throw new NotImplementedException(); }
-        public DataPackage GetCategory() { throw new NotImplementedException(); }
-
-        public DataPackage GetUser(int UserID)
+        /// <summary>
+        /// Returns a DataPackage with all Difficulty Levels in the Database
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public DataPackage GetDifficulty() 
         {
             DataPackage package = new DataPackage();
-
             try
             {
-                string query = string.Format(@"SELECT * FROM User WHERE ID = {0}", UserID);
+                string sql = string.Format(@"SELECT NAME FROM Difficulty;");
                 this._connection.Open();
-                MySqlDataReader reader = this.ExecuteQuery(query);
-
+                List<Difficulty> difficulties = new List<Difficulty>();
+                MySqlDataReader reader = this.ExecuteQuery(sql);
                 while (reader.Read())
                 {
-                    User user = new User();
-                    user.ID = Convert.ToInt32(reader["ID"]);
-                    user.NAME = reader["NAME"].ToString() ?? "";
-                    user.LEVEL = Convert.ToInt32(reader["LEVEL"]);
-                    user.XP = Convert.ToInt32(reader["XP"]);
-                    user.EMAIL = reader["EMAIL"].ToString() ?? "";
-                    package.Payload = user;
+                    Difficulty difficulty = new Difficulty();
+                    difficulty.ID = reader.GetInt32("ID");
+                    difficulty.NAME = reader.GetString("NAME");
 
-                    break;
+                    difficulties.Add(difficulty);
                 }
+                this._connection.Close();
+
+                package.Payload = difficulties;
             }
             catch (Exception ex)
             {
+                // Fehler bearbeitung 
                 package.Payload = null;
-                package.Error = true;
+                package.Error = ex.Message;
             }
             finally
             {
+                // Datenbankverbindung schließen
                 this._connection.Close();
             }
 
-            if(package.Payload == null) { package.Error = true; }
+            // Datenpaket zurückgebens
+            if (package.Payload == null) { package.Error = true; }
+            return package;
+        }
+        /// <summary>
+        /// Returns a DataPackage with all Categorys in the Database
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public DataPackage GetCategory() 
+        {
+            DataPackage package = new DataPackage();
+            try
+            {
+                string sql = string.Format(@"SELECT NAME FROM Difficulty;");
+                this._connection.Open();
+                List<Category> categorys = new List<Category>();
+                MySqlDataReader reader = this.ExecuteQuery(sql);
+                while (reader.Read())
+                {
+                    Category category = new Category();
+                    category.ID = reader.GetInt32("ID");
+                    category.NAME = reader.GetString("NAME");
 
+                    categorys.Add(category);
+                }
+                this._connection.Close();
+
+                package.Payload = categorys;
+            }
+            catch (Exception ex)
+            {
+                // Fehler bearbeitung 
+                package.Payload = null;
+                package.Error = ex.Message;
+            }
+            finally
+            {
+                // Datenbankverbindung schließen
+                this._connection.Close();
+            }
+
+            // Datenpaket zurückgebens
+            if (package.Payload == null) { package.Error = true; }
             return package;
         }
 
@@ -916,6 +1003,22 @@ namespace KuechenQuestAPI.Classes
             {
                 return command.ExecuteReader();
             }
+        }
+
+        private int GetLastInsertedID()
+        {
+            string sql = string.Format(@"SELECT LAST_INSERT_ID() as 'ID';");
+            this._connection.Open();
+            MySqlDataReader reader = this.ExecuteQuery(sql);
+            int i = 0;
+            while (reader.Read())
+            {
+                i = reader.GetInt32("ID");
+                break;
+            }
+            this._connection.Close();
+
+            return i;
         }
     }
 }
