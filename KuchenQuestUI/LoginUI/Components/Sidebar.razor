@@ -1,0 +1,23 @@
+﻿<div class="sidebar" style="@SidebarStyle">
+    <button class="close-btn" @onclick="ToggleSidebar">✖</button>
+    <ul>
+        <li><img src="/images/icons8-profilbild-100.png" /><a href="/profil">Profil</a></li>
+        <li><img src="/images/icons8-kochbuch-50.png" /><a href="#">Kochbuch</a></li>
+        <li><img src="/images/icons8-einkaufsbeutel-48.png" /><a href="#">Einkaufsliste</a></li>
+        <li><img src="/images/icons8-qr-code-30.png" /><a href="#">QR-Scanner</a></li>
+        <li><img src="/images/icons8-zahnrad-24.png" /><a href="#">Einstellungen</a></li>
+        <li><img src="/images/icons8-ausgang-50.png" /><a href="/login">Ausloggen</a></li>
+    </ul>
+</div>
+
+@code {
+    [Parameter] public bool IsSidebarOpen { get; set; }
+    [Parameter] public EventCallback<bool> OnSidebarToggle { get; set; }
+
+    private string SidebarStyle => IsSidebarOpen ? "left: 0;" : "left: -50%;";
+
+    private async Task ToggleSidebar()
+    {
+        await OnSidebarToggle.InvokeAsync(!IsSidebarOpen);
+    }
+}
