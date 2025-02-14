@@ -1,0 +1,92 @@
+﻿@page "/scanner"
+@inject NavigationManager NavManager
+@using ZXing.Net.Maui
+@using ZXing.Net.Maui.Controls
+
+<PageTitle>Barcode Scanner</PageTitle>
+
+<link rel="stylesheet" href="css/Barcode.razor.css"/>
+
+<div class="scanner-container">
+    <h2>Barcode Scanner</h2>
+
+    @if (!IsScanning)
+    {
+        <button @onclick="StartScanning" class="scan-btn">📷 Scan starten</button>
+    }
+    else
+    {
+        <zxing-camera-view x:Name="CameraBarcodeReader"
+                           OnDetected="OnBarcodeScanned"
+                           IsScanning="true"
+                           IsTorchOn="false"
+                           CameraLocation="Rear"
+                           HorizontalOptions="FillAndExpand"
+                           VerticalOptions="FillAndExpand">
+        </zxing-camera-view>
+
+        <button @onclick="StopScanning" class="scan-btn stop">⏹ Stop</button>
+    }
+
+    @if (!string.IsNullOrEmpty(ScannedCode))
+    {
+        <p class="scan-result">Gescannt: <b>@ScannedCode</b></p>
+    }
+
+</div>
+
+<style>
+    .scanner-container {
+        text-align: center;
+        padding: 20px;
+        background: #2f2f48;
+        color: white;
+        height: 100vh;
+    }
+
+    .scan-btn {
+        padding: 10px 20px;
+        background: #28a745;
+        color: white;
+        border: none;
+        font-size: 18px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+
+        .scan-btn.stop {
+            background: red;
+        }
+
+    .scan-result {
+        margin-top: 20px;
+        font-size: 20px;
+    }
+</style>
+
+@code {
+    private bool IsScanning = false;
+    private string ScannedCode = "";
+
+    private void StartScanning()
+    {
+        IsScanning = true;
+        ScannedCode = "";
+    }
+
+    private void StopScanning()
+    {
+        IsScanning = false;
+    }
+
+    private void OnBarcodeScanned(BarcodeDetectionEventArgs args)
+    {
+        if (args.Results.Count() > 0)
+        {
+            
+            ScannedCode = args.Results[0].Value;
+            IsScanning = false;
+        }
+    }
+}

@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="css/site.css">
 
 <div class="container">
-    <img src="images/logo.png" alt="KüchenQuest Logo" class="logo">
+    <img src="/images/LogoSmall.png" alt="KüchenQuest Logo" class="logo">
     <h1>KüchenQuest</h1>
     <div class="input-group">
         <input type="text" @bind="Username" placeholder="Anmeldename">
@@ -81,7 +81,7 @@
 
     private void Register()
     {
-        Navigation.NavigateTo("/login");
+        Navigation.NavigateTo("/register");
     }
 
     public class DataPackage

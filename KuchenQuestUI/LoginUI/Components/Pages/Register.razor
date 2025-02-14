@@ -2,10 +2,9 @@
 
 @inject HttpClient Http
 @inject NavigationManager Navigation
-@using System.Net.Http.Json
 
 <div class="container">
-    <img src="images/logo.png" alt="KüchenQuest Logo" class="logo">
+    <img src="/images/LogoMedium.png" alt="KüchenQuest Logo" class="logo">
     <h1>KüchenQuest</h1>
     <div class="input-group">
         <input type="email" @bind="Email" placeholder="Email">
@@ -16,7 +15,7 @@
     <div class="input-group">
         <input type="password" @bind="Password" placeholder="Passwort">
     </div>
-    <button class="register-btn" @onclick="OnRegister">Registrieren</button>
+    <button class="register-btn" @onclick="() => OnRegister()">Registrieren</button>
 </div>
 
 @code {
@@ -26,17 +25,32 @@
 
     private async Task OnRegister()
     {
+        Console.WriteLine("OnRegister() wurde aufgerufen!");  // Debugging
+        
+        if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
+        {
+            Console.WriteLine("Bitte alle Felder ausfüllen.");
+            return;
+        }
+
         try
         {
-            var userData = new { Email, Username, Password };
-            string url = "https://192.168.50.240:7067/KuechenQuest/User/Register";
-            await Http.PostAsJsonAsync(url, userData);
+            string url = $"https://192.168.50.240:7067/KuechenQuest/User/Register/{Username}/{Email}/{Password}";
+            var response = await Http.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Registrierung erfolgreich!");
+                Navigation.NavigateTo("/login");
+            }
+            else
+            {
+                Console.WriteLine("Registrierung fehlgeschlagen.");
+            }
         }
         catch (Exception ex)
         {
             Console.WriteLine("Fehler bei der Registrierung: " + ex.Message);
         }
-
-        Navigation.NavigateTo("/login"); // Nach Registrierung zur Login-Seite
     }
 }
