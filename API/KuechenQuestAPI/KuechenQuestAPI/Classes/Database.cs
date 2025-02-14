@@ -490,6 +490,11 @@ namespace KuechenQuestAPI.Classes
         #endregion
 
         #region Utensil
+        /// <summary>
+        /// Returns a DataPackage with the corresponding Utensil if one is found
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public DataPackage GetUtensil(int id) 
         {
             DataPackage package = new DataPackage();
@@ -530,6 +535,10 @@ namespace KuechenQuestAPI.Classes
             if (package.Payload == null) { package.Error = true; }
             return package;
         }
+        /// <summary>
+        /// Returns a DataPackage with all Utensils that are saved in the Database
+        /// </summary>
+        /// <returns></returns>
         public DataPackage GetAllUtensils() 
         {
             DataPackage package = new DataPackage();
@@ -572,6 +581,11 @@ namespace KuechenQuestAPI.Classes
             if (package.Payload == null) { package.Error = true; }
             return package;
         }
+        /// <summary>
+        /// Creates a Utensil in the Database with the given Recipe Objekt
+        /// </summary>
+        /// <param name="recipe"></param>
+        /// <returns></returns>
         public DataPackage CreateUtensil(Utensil utensil) 
         {
             DataPackage package = new DataPackage();
@@ -603,6 +617,11 @@ namespace KuechenQuestAPI.Classes
             if (package.Payload == null) { package.Error = true; }
             return package;
         }
+        /// <summary>
+        /// Deletes a Utensil with the given ID in the Database
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public DataPackage DeleteUntensil(int id) 
         {
             DataPackage package = new DataPackage();
@@ -631,6 +650,11 @@ namespace KuechenQuestAPI.Classes
             if (package.Payload == null) { package.Error = true; }
             return package;
         }
+        /// <summary>
+        /// Updates Information of a Utensil 
+        /// </summary>
+        /// <param name="recipe"></param>
+        /// <returns></returns>
         public DataPackage UpdateUtensil(Utensil utensil) 
         {
             DataPackage package = new DataPackage();
