@@ -4,7 +4,7 @@
 @inject NavigationManager Navigation
 
 <div class="container">
-    <img src="/images/LogoMedium.png" alt="KüchenQuest Logo" class="logo">
+    <img src="images/logoMedium.png" alt="KüchenQuest Logo" class="logo">
     <h1>KüchenQuest</h1>
     <div class="input-group">
         <input type="email" @bind="Email" placeholder="Email">
@@ -15,7 +15,10 @@
     <div class="input-group">
         <input type="password" @bind="Password" placeholder="Passwort">
     </div>
-    <button class="register-btn" @onclick="() => OnRegister()">Registrieren</button>
+    <div class="button-group">
+        <button class="back-btn" @onclick="NavigateToLogin">Zurück</button>
+        <button class="register-btn" @onclick="OnRegister">Registrieren</button>
+    </div>
 </div>
 
 @code {
@@ -26,7 +29,7 @@
     private async Task OnRegister()
     {
         Console.WriteLine("OnRegister() wurde aufgerufen!");  // Debugging
-        
+
         if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
         {
             Console.WriteLine("Bitte alle Felder ausfüllen.");
@@ -35,8 +38,9 @@
 
         try
         {
-            string url = $"https://192.168.50.240:7067/KuechenQuest/User/Register/{Username}/{Email}/{Password}";
-            var response = await Http.GetAsync(url);
+            // Sende den POST-Request an den API-Endpunkt mit den Registrierungsdaten im Body
+            var registerData = new { Email, Username, Password };
+            var response = await Http.PostAsJsonAsync("https://192.168.50.240:7067/KuechenQuest/User/Register", registerData);
 
             if (response.IsSuccessStatusCode)
             {
@@ -52,5 +56,10 @@
         {
             Console.WriteLine("Fehler bei der Registrierung: " + ex.Message);
         }
+    }
+
+    private void NavigateToLogin()
+    {
+        Navigation.NavigateTo("/login");
     }
 }
