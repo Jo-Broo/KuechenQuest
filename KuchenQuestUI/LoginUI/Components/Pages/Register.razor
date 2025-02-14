@@ -1,6 +1,8 @@
 @page "/register"
 
+@inject HttpClient Http
 @inject NavigationManager Navigation
+@using System.Net.Http.Json
 
 <div class="container">
     <img src="images/logo.png" alt="KüchenQuest Logo" class="logo">
@@ -22,9 +24,19 @@
     private string Username { get; set; } = "";
     private string Password { get; set; } = "";
 
-    private void OnRegister()
+    private async Task OnRegister()
     {
-        Console.WriteLine($"Registrierung mit: {Email}, {Username}");
+        try
+        {
+            var userData = new { Email, Username, Password };
+            string url = "https://192.168.50.240:7067/KuechenQuest/User/Register";
+            await Http.PostAsJsonAsync(url, userData);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Fehler bei der Registrierung: " + ex.Message);
+        }
+
         Navigation.NavigateTo("/login"); // Nach Registrierung zur Login-Seite
     }
 }
