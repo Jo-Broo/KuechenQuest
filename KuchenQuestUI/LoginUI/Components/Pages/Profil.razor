@@ -1,0 +1,129 @@
+﻿@page "/profil"
+@inject HttpClient Http
+
+<link rel="stylesheet" href="css/profil.css">
+
+<div class="profile-container">
+    <!-- Navbar Icon & Logo -->
+    <div class="header">
+        <img src="images/menu-icon.png" class="menu-icon" @onclick="ToggleMenu" />
+        <img src="images/logo.png" class="app-logo" />
+    </div>
+
+    <!-- Profilbild & Name -->
+    <div class="profile-info">
+        <img src="@ProfilbildUrl" class="profile-pic" />
+        <h2>@Username</h2>
+    </div>
+
+    <!-- XP Bar -->
+    <div class="xp-container">
+        <div class="xp-bar" style="width: @(XPProgress)%"></div>
+        <span>Level @Level</span>
+    </div>
+
+    <!-- Erfolge -->
+    <div class="collapsible" @onclick="ToggleErfolge">
+        <span class="indicator @(ShowErfolge ? "open" : "closed")"></span> Erfolge
+    </div>
+    @if (ShowErfolge)
+    {
+        <div class="content">
+            @if (Erfolge.Count > 0)
+            {
+                @foreach (var erfolg in Erfolge)
+                {
+                    <div class="erfolg-item @(erfolg.Erreicht ? "reached" : "not-reached")">
+                        @erfolg.Name
+                    </div>
+                }
+            }
+            else
+            {
+                <p>Keine Erfolge gefunden.</p>
+            }
+        </div>
+    }
+
+    <!-- Zutatenlevel -->
+    <div class="collapsible" @onclick="ToggleZutaten">
+        <span class="indicator @(ShowZutaten ? "open" : "closed")"></span> Zutatenlevel
+    </div>
+    @if (ShowZutaten)
+    {
+        <div class="content">
+            @if (Zutaten.Count > 0)
+            {
+                @foreach (var zutat in Zutaten)
+                {
+                    <div class="zutat-item">
+                        <strong>@zutat.Name</strong> - Level @zutat.Level
+                    </div>
+                }
+            }
+            else
+            {
+                <p>Keine Zutaten gefunden.</p>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private string Username = "Lädt...";
+    private string ProfilbildUrl = "images/profile-placeholder.png";
+    private int Level = 0;
+    private int XP = 0;
+    private int XPMax = 100;
+    private int XPProgress => XPMax > 0 ? (XP * 100) / XPMax : 0;
+
+    private bool ShowErfolge = false;
+    private bool ShowZutaten = false;
+
+    private List<Erfolg> Erfolge = new();
+    private List<Zutat> Zutaten = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var userData = await Http.GetFromJsonAsync<UserData>("https://api.example.com/userdata");
+            if (userData != null)
+            {
+                Username = userData.Username;
+                ProfilbildUrl = userData.ProfilbildUrl ?? "images/profile-placeholder.png";
+                Level = userData.Level;
+                XP = userData.XP;
+                XPMax = userData.XPMax;
+            }
+
+            var erfolgeData = await Http.GetFromJsonAsync<List<Erfolg>>("https://api.example.com/erfolge");
+            if (erfolgeData != null)
+                Erfolge = erfolgeData;
+
+            var zutatenData = await Http.GetFromJsonAsync<List<Zutat>>("https://api.example.com/zutaten");
+            if (zutatenData != null)
+                Zutaten = zutatenData;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fehler beim Laden der Daten: {ex.Message}");
+        }
+    }
+
+    private void ToggleErfolge() => ShowErfolge = !ShowErfolge;
+    private void ToggleZutaten() => ShowZutaten = !ShowZutaten;
+    private void ToggleMenu() => Console.WriteLine("Menu clicked!");
+
+    private class UserData
+    {
+        public string Username { get; set; } = "";
+        public string? ProfilbildUrl { get; set; }
+        public int Level { get; set; }
+        public int XP { get; set; }
+        public int XPMax { get; set; }
+    }
+
+    private class Erfolg { public string Name { get; set; } = ""; public bool Erreicht { get; set; } = false; }
+    private class Zutat { public string Name { get; set; } = ""; public int Level { get; set; } = 1; }
+}
