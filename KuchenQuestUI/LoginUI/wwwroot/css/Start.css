@@ -1,57 +1,91 @@
-/*CSS For Homepage*/
-
-/* Allgemeines Styling */
-.container {
+/* Hauptcontainer */
+.profile-container {
+    text-align: center;
+    background-color: #2f2f48;
+    color: white;
     width: 100vw;
     height: 100vh;
-    background: #2f2f48;
-    color: white;
-    padding: 10px;
+    padding: 20px;
+    position: relative;
 }
 
-.top-bar {
+/* Header / Navbar */
+.header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    background: #3e3e5a;
-    padding: 10px;
-    width: auto;
-    border-radius: 10px;
+    align-items: center;
 }
 
-.menu-btn img {
+.menu-icon {
     width: 30px;
+    height:auto;
+    cursor: pointer;
 }
 
+.app-logo {
+    width: 50px;
+    height:auto;
+}
+
+/* Suchleiste */
 .search-bar {
-    flex: 1;
-    margin: 0 10px;
-    width: auto;
-    padding: 5px;
+    width: 80%;
+    padding: 10px;
     border-radius: 5px;
     border: none;
+    margin-top: 10px;
 }
 
+.filter-btn {
+    padding: 8px 15px;
+    background: #28a745;
+    border: none;
+    color: white;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+/* Rezeptliste */
 .recipe-list {
-    margin: 10px;
+    margin-top: 20px;
 }
 
 .recipe-card {
-    background: #4a4a69;
+    background: #3e3e5a;
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 10px;
+    animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Sidebar (kommt zur Hälfte ins Bild) */
+/*Green Point*/
+
+.indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: lime;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
+.open {
+    background: lime;
+}
+
+.closed {
+    background: gray;
+}
+
+/* Sidebar */
 .sidebar {
     position: fixed;
     top: 0;
-    left: -50%; /* Schiebt die Sidebar ganz aus dem Bildschirm */
+    left: -50%;
     width: 50%;
     height: 100%;
     background: linear-gradient(to bottom, #4CAF50, #3C3C5A);
-    transition: left 0.3s ease-in-out; /* Nur left animieren */
+    transition: transform 0.3s ease-in-out;
     padding: 15px;
     box-shadow: 3px 0px 10px rgba(0, 0, 0, 0.3);
     border-radius: 0 10px 10px 0;
@@ -92,3 +126,16 @@
             text-decoration: none;
             color: white;
         }
+
+/* Animation für Rezeptkarten */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+
+    to {
+        opacity: 1;
+        max-height: 200px;
+    }
+}

@@ -6,44 +6,43 @@
 <link rel="stylesheet" href="css/Start.css">
 
 <!-- Hauptcontainer -->
-<div class="container">
+<div class="profile-container">
     <!-- Navbar -->
-    <div class="top-bar">
-        <button class="menu-btn" @onclick="ToggleSidebar">
-            <img src="~/images/icons8-menü-50(1).png" alt="Menü" />
-        </button>
-        <input type="text" placeholder="Suche..." class="search-bar" />
-        <button class="filter-btn">🔍</button>
+    <div class="header">
+        <img src="/images/icon-menu.png" alt="Menü" class="menu-icon" @onclick="ToggleSidebar" />
+        <img src="/images/LogoMedium.png" alt="App Logo" class="app-logo" />
     </div>
+
+    <!-- Suchleiste -->
+    <input type="text" placeholder="Suche..." class="search-bar" />
+    <button class="filter-btn">🔍</button>
 
     <!-- Rezeptliste -->
     <div class="recipe-list">
+        
         <div class="recipe-card highlight">
+            <span class="indicator"></span>
             <img src="wwwroot/muffins.jpg" alt="Highlight des Tages" class="recipe-img" />
             <div class="recipe-title">Highlight des Tages</div>
         </div>
-        <div class="recipe-card">Probier was Neues</div>
-        <div class="recipe-card">Rezept 1</div>
-        <div class="recipe-card">Rezept 2</div>
+        <div class="recipe-card"><span class="indicator"></span>Probier was Neues</div>
+        <div class="recipe-card"><span class="indicator"></span>Rezept 1</div>
+        <div class="recipe-card"><span class="indicator"></span>Rezept 2</div>
     </div>
 </div>
 
-<!-- Sidebar (bleibt in Home.razor) -->
+<!-- Sidebar -->
 <div class="sidebar" style="@SidebarStyle">
     <button class="close-btn" @onclick="ToggleSidebar">✖</button>
     <ul>
-        <li><img src="~/images/icons8-profilbild-100.png" /><a href="/profil">Profil</a></li>
-        <li><img src="~/images/icons8-kochbuch-50.png" /><a href="#">Kochbuch</a></li>
-        <li><img src="~/images/icons8-einkaufsbeutel-48.png" /><a href="#">Einkaufsliste</a></li>
-        <li><img src="~/images/icons8-qrcode-30.png" /><a href="#">QR-Scanner</a></li>
-        <li><img src="~/images/icons8-zahnrad-24.png" /><a href="#">Einstellungen</a></li>
-        <li><img src="~/images/icons8-ausgang-50.png" /><a href="#">Ausloggen</a></li>
+        <li><img src="/images/icons8-profilbild-100.png" /><a href="/profil">Profil</a></li>
+        <li><img src="/images/icons8-kochbuch-50.png" /><a href="#">Kochbuch</a></li>
+        <li><img src="/images/icons8-einkaufsbeutel-48.png" /><a href="#">Einkaufsliste</a></li>
+        <li><img src="/images/icons8-qr-code-30.png" /><a href="/scanner">QR-Scanner</a></li>
+        <li><img src="/images/icons8-zahnrad-24.png" /><a href="#">Einstellungen</a></li>
+        <li><img src="/images/icons8-ausgang-50.png" /><a href="/login">Ausloggen</a></li>
     </ul>
 </div>
-
-<style>
-
-</style>
 
 @code {
     private bool IsSidebarOpen = false;
@@ -51,7 +50,6 @@
     private string SidebarStyle => IsSidebarOpen
         ? "left: 0;"
         : "left: -50%;";
-
 
     private void ToggleSidebar()
     {
