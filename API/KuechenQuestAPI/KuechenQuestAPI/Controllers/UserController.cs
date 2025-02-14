@@ -11,6 +11,14 @@ namespace KuechenQuestAPI.Controllers
     {
         private Database database = new Database("SERVER=localhost;DATABASE=KuechenQuest;UID=root;PASSWORD=;");
 
+        [HttpGet("{id}")]
+        public IActionResult GetUser(int id)
+        {
+            User? user = this.database.GetUserByID(id);
+            if (user == null) return NotFound();
+            return Ok(user);
+        }
+
         [HttpPost("Login")]
         public IActionResult Login([FromBody] MyLoginRequest request)
         {
@@ -20,22 +28,13 @@ namespace KuechenQuestAPI.Controllers
             }
 
             User? user = this.database.Login(request.Username, request.Password);
-            if (User == null)
+            if (user == null)
             {
                 return BadRequest();
             }
 
             return Ok(JsonSerializer.Serialize(user));
         }
-
-        [HttpGet("{id}")]
-        public IActionResult GetUser(int id)
-        {
-            User? user = this.database.GetUser(id);
-            if (user == null) return NotFound();
-            return Ok(user);
-        }
-
 
         [HttpPost("Register")]
         public IActionResult RegisterUser([FromBody] MyRegisterRequest request)
