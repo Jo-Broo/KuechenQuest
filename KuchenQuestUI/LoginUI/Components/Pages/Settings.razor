@@ -1,0 +1,37 @@
+@page "/settings"
+@inject NavigationManager Navigation
+
+<Page Title="Einstellungen" class="@themeClass">
+    <StackLayout Padding="20">
+        <Button @onclick="ToggleTheme" class="settings-button">
+            <Image WidthRequest="20" HeightRequest="20" Source="@themeIcon" />
+            <Label>Theme</Label>
+        </Button>
+
+        <Button @onclick="NavigateToLanguagePage" class="settings-button">
+            <Label>Language</Label>
+        </Button>
+    </StackLayout>
+</Page>
+
+@code {
+    private bool isDarkMode = false;
+    private string themeIcon => isDarkMode ? "sun.png" : "moon.png";
+    private string themeClass => isDarkMode ? "dark-theme" : "light-theme";
+
+    protected override void OnInitialized()
+    {
+        isDarkMode = Application.Current.UserAppTheme == AppTheme.Dark;
+    }
+
+    private void ToggleTheme()
+    {
+        isDarkMode = !isDarkMode;
+        Application.Current.UserAppTheme = isDarkMode ? AppTheme.Dark : AppTheme.Light;
+    }
+
+    private void NavigateToLanguagePage()
+    {
+        Navigation.NavigateTo("/language");
+    }
+}
