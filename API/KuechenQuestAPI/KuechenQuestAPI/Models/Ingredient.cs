@@ -8,7 +8,6 @@ namespace KuechenQuestAPI.Models
         public string NAME { get; set; } = string.Empty;
         public int CATEGORY { get; set; }
         public float QUANTITY { get; set; }
-
         public string IMAGE { get; set; } = string.Empty;
 
         public static Ingredient CreateFromJson(string? json)
