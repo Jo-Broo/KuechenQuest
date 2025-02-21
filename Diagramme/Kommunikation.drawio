@@ -1,0 +1,58 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 OPR/116.0.0.0" version="24.8.3">
+  <diagram name="Seite-1" id="ZdDDgZmxfEymglVtYDR9">
+    <mxGraphModel dx="1624" dy="878" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="dGLW8iqrIsCMdVEBl1y--19" value="" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="925" y="267.38" width="200" height="150.25" as="geometry" />
+        </mxCell>
+        <mxCell id="dGLW8iqrIsCMdVEBl1y--8" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="20" y="70" width="820" height="570" as="geometry" />
+        </mxCell>
+        <mxCell id="dGLW8iqrIsCMdVEBl1y--1" value="" style="image;html=1;image=img/lib/clip_art/computers/Laptop_128x128.png" vertex="1" parent="1">
+          <mxGeometry x="390" y="365" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="dGLW8iqrIsCMdVEBl1y--3" value="" style="image;html=1;image=img/lib/clip_art/computers/Database_128x128.png" vertex="1" parent="1">
+          <mxGeometry x="390" y="540" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="dGLW8iqrIsCMdVEBl1y--4" value="" style="aspect=fixed;sketch=0;html=1;dashed=0;whitespace=wrap;verticalLabelPosition=bottom;verticalAlign=top;fillColor=#2875E2;strokeColor=#ffffff;points=[[0.005,0.63,0],[0.1,0.2,0],[0.9,0.2,0],[0.5,0,0],[0.995,0.63,0],[0.72,0.99,0],[0.5,1,0],[0.28,0.99,0]];shape=mxgraph.kubernetes.icon2;kubernetesLabel=1;prIcon=api" vertex="1" parent="1">
+          <mxGeometry x="405" y="317" width="50" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="dGLW8iqrIsCMdVEBl1y--5" value="" style="shape=doubleArrow;whiteSpace=wrap;html=1;gradientColor=none;gradientDirection=east;fillColor=#3399FF;" vertex="1" parent="1">
+          <mxGeometry x="180" y="325" width="210" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="dGLW8iqrIsCMdVEBl1y--7" value="open Food facts API" style="aspect=fixed;sketch=0;html=1;dashed=0;whitespace=wrap;verticalLabelPosition=bottom;verticalAlign=top;fillColor=#2875E2;strokeColor=#ffffff;points=[[0.005,0.63,0],[0.1,0.2,0],[0.9,0.2,0],[0.5,0,0],[0.995,0.63,0],[0.72,0.99,0],[0.5,1,0],[0.28,0.99,0]];shape=mxgraph.kubernetes.icon2;kubernetesLabel=1;prIcon=api" vertex="1" parent="1">
+          <mxGeometry x="1000" y="318.5" width="50" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="dGLW8iqrIsCMdVEBl1y--2" value="WLAN Hotspot" style="image;points=[];aspect=fixed;html=1;align=center;shadow=0;dashed=0;image=img/lib/allied_telesis/computer_and_terminals/Smartphone.svg;" vertex="1" parent="1">
+          <mxGeometry x="420.1" y="90" width="19.8" height="43.199999999999996" as="geometry" />
+        </mxCell>
+        <mxCell id="dGLW8iqrIsCMdVEBl1y--10" value="KuchenQuest API" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="370" y="299" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="dGLW8iqrIsCMdVEBl1y--11" value="" style="image;html=1;image=img/lib/clip_art/computers/Laptop_128x128.png" vertex="1" parent="1">
+          <mxGeometry x="90" y="258" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="dGLW8iqrIsCMdVEBl1y--12" value="" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.tablet_2;" vertex="1" parent="1">
+          <mxGeometry x="90" y="350" width="49.58" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="dGLW8iqrIsCMdVEBl1y--13" value="HTTPS" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="255" y="308" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="dGLW8iqrIsCMdVEBl1y--14" value="" style="shape=doubleArrow;whiteSpace=wrap;html=1;fillColor=#3399FF;" vertex="1" parent="1">
+          <mxGeometry x="490" y="323.5" width="440" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="dGLW8iqrIsCMdVEBl1y--15" value="HTTPS" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="685" y="308" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="dGLW8iqrIsCMdVEBl1y--16" value="" style="shape=doubleArrow;whiteSpace=wrap;html=1;rotation=90;fillColor=#3399FF;" vertex="1" parent="1">
+          <mxGeometry x="390" y="470" width="80" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="dGLW8iqrIsCMdVEBl1y--17" value="MariaDB" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="455" y="590" width="70" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
