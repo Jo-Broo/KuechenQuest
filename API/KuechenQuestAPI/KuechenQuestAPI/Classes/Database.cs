@@ -8,11 +8,11 @@ namespace KuechenQuestAPI.Classes
 {
     public class Database
     {
-        private MySqlConnection _connection;
+        private MySqlConnection connection;
 
         public Database(string connectionString)
         {
-            this._connection = new MySqlConnection(connectionString);
+            this.connection = new MySqlConnection(connectionString);
         }
 
         #region User Functions
@@ -22,7 +22,7 @@ namespace KuechenQuestAPI.Classes
             try
             {
                 string sql = string.Format(@"select * from user where NAME = '{0}' AND PASSWORD = '{1}';",username,password);
-                this._connection.Open();
+                this.connection.Open();
                 MySqlDataReader reader = this.ExecuteQuery(sql);
                 while (reader.Read()) 
                 {
@@ -34,7 +34,7 @@ namespace KuechenQuestAPI.Classes
                     user.EMAIL = reader.GetString("EMAIL");
                     break;
                 }
-                this._connection.Close();
+                this.connection.Close();
             }
             catch (Exception)
             {
@@ -42,7 +42,7 @@ namespace KuechenQuestAPI.Classes
             }
             finally
             {
-                this._connection.Close();
+                this.connection.Close();
             }
 
             return user;
@@ -56,9 +56,9 @@ namespace KuechenQuestAPI.Classes
                                                 User(NAME,PASSWORD,EMAIL)
                                              VALUES 
                                                 ('{0}','{1}','{2}');", username, password, email);
-                this._connection.Open();
+                this.connection.Open();
                 this.ExecuteQuery(sql);
-                this._connection.Close();
+                this.connection.Close();
                 user = this.GetUserByID(this.GetLastInsertedID());
             }
             catch (Exception)
@@ -67,7 +67,7 @@ namespace KuechenQuestAPI.Classes
             }
             finally
             {
-                this._connection.Close();
+                this.connection.Close();
             }
 
             return user;
@@ -78,7 +78,7 @@ namespace KuechenQuestAPI.Classes
             try
             {
                 string sql = string.Format(@"SELECT * FROM User WHERE ID = {0}",id);
-                this._connection.Open();
+                this.connection.Open();
                 MySqlDataReader reader = this.ExecuteQuery(sql);
                 while (reader.Read())
                 {
@@ -88,7 +88,7 @@ namespace KuechenQuestAPI.Classes
                     user.XP = reader.GetInt32("XP");
                     user.EMAIL = reader.GetString("EMAIL");
                 }
-                this._connection.Close();
+                this.connection.Close();
             }
             catch (Exception)
             {
@@ -96,7 +96,7 @@ namespace KuechenQuestAPI.Classes
             }
             finally
             {
-                this._connection.Close();
+                this.connection.Close();
             }
 
             return user;
@@ -123,7 +123,7 @@ namespace KuechenQuestAPI.Classes
                                             FROM Recipe r
                                             JOIN Difficulty d ON r.DIFFICULTY = d.ID
                                             WHERE r.ID = {0};", id);
-                this._connection.Open();
+                this.connection.Open();
                 MySqlDataReader reader = this.ExecuteQuery(sql);
                 result = new Recipe();
                 while (reader.Read())
@@ -137,7 +137,7 @@ namespace KuechenQuestAPI.Classes
                     result.RATINGCOUNT = reader.GetInt32("RATINGCOUNT");
                     result.IMAGE = reader.GetString("IMAGE");
                 }
-                this._connection.Close();
+                this.connection.Close();
                 #endregion
                 #region Utensilien
                 sql = string.Format(@"SELECT 
@@ -150,7 +150,7 @@ namespace KuechenQuestAPI.Classes
                                     FROM Recipe_Utensil ru
                                     JOIN Utensil u ON ru.UTENSILID = u.ID
                                     WHERE ru.RECIPEID = {0};", id);
-                this._connection.Open();
+                this.connection.Open();
                 reader = this.ExecuteQuery(sql);
                 while (reader.Read())
                 {
@@ -161,7 +161,7 @@ namespace KuechenQuestAPI.Classes
 
                     result.Utensils.Add(utensil);
                 }
-                this._connection.Close();
+                this.connection.Close();
                 #endregion
                 #region Zutaten
                 sql = string.Format(@"SELECT 
@@ -176,7 +176,7 @@ namespace KuechenQuestAPI.Classes
                                     JOIN Ingredient i ON ri.INGREDIENTID = i.ID
                                     JOIN Category c ON i.CATEGORY = c.ID
                                     WHERE ri.RECIPEID = {0};", id);
-                this._connection.Open();
+                this.connection.Open();
                 reader = this.ExecuteQuery(sql);
                 while (reader.Read())
                 {
@@ -188,7 +188,7 @@ namespace KuechenQuestAPI.Classes
 
                     result.Ingredients.Add(ingredient);
                 }
-                this._connection.Close();
+                this.connection.Close();
                 #endregion
             }
             catch (Exception)
@@ -214,7 +214,7 @@ namespace KuechenQuestAPI.Classes
                                                 r.IMAGE
                                             FROM Recipe r
                                             JOIN Difficulty d ON r.DIFFICULTY = d.ID");
-                this._connection.Open();
+                this.connection.Open();
                 MySqlDataReader reader = this.ExecuteQuery(sql);
                 while (reader.Read())
                 {
@@ -232,7 +232,7 @@ namespace KuechenQuestAPI.Classes
 
                 foreach (Recipe recipe in recipes)
                 {
-                    this._connection.Open();
+                    this.connection.Open();
                     string utensil_sql = string.Format(@"SELECT 
                                                             ru.ID,
                                                             ru.RECIPEID,
@@ -253,9 +253,9 @@ namespace KuechenQuestAPI.Classes
 
                         recipe.Utensils.Add(utensil);
                     }
-                    this._connection.Close();
+                    this.connection.Close();
 
-                    this._connection.Open();
+                    this.connection.Open();
                     string ingredient_sql = string.Format(@"SELECT 
                                                                 ri.ID,
                                                                 ri.RECIPEID,
@@ -280,7 +280,7 @@ namespace KuechenQuestAPI.Classes
                         recipe.Ingredients.Add(ingredient);
                     }
 
-                    this._connection.Close();
+                    this.connection.Close();
                 }
             }
             catch (Exception)
@@ -303,9 +303,9 @@ namespace KuechenQuestAPI.Classes
                                                       {2},
                                                       '{3}',
                                                       '{4}');", recipe.NAME, recipe.TIME, recipe.DIFFICULTY, recipe.INSTRUCTIONS, recipe.IMAGE);
-                this._connection.Open();
+                this.connection.Open();
                 this.ExecuteQuery(sql);
-                this._connection.Close();
+                this.connection.Close();
 
                 recipe.ID = this.GetLastInsertedID();
 
@@ -315,9 +315,9 @@ namespace KuechenQuestAPI.Classes
                     sql = string.Format(@"INSERT INTO 
                                             Recipe_Utensil (RECIPEID, UTENSILID, QUANTITY)
                                             VALUES ({0}, {1}, {2})", recipe.ID, utensil.ID, utensil.QUANTITY);
-                    this._connection.Open();
+                    this.connection.Open();
                     this.ExecuteQuery(sql);
-                    this._connection.Close();
+                    this.connection.Close();
                 }
 
                 // Utensilien speichern
@@ -326,9 +326,9 @@ namespace KuechenQuestAPI.Classes
                     sql = string.Format(@"INSERT INTO 
                                             Recipe_Ingredient(RECIPEID, INGREDIENTID, QUANTITY)
                                             VALUES ({0}, {1}, {2})", recipe.ID, ingredient.ID, ingredient.QUANTITY);
-                    this._connection.Open();
+                    this.connection.Open();
                     this.ExecuteQuery(sql);
-                    this._connection.Close();
+                    this.connection.Close();
                 }
 
                 result = this.GetRecipeByID(recipe.ID);
@@ -346,9 +346,9 @@ namespace KuechenQuestAPI.Classes
             try
             {
                 string sql = string.Format(@"DELETE FROM Recipe WHERE ID = {0}", id);
-                this._connection.Open();
+                this.connection.Open();
                 this.ExecuteQuery(sql);
-                this._connection.Close();
+                this.connection.Close();
 
                 // Utensilien und Zutaten werden mit On Cascade automatisch gelöscht
 
@@ -383,7 +383,7 @@ namespace KuechenQuestAPI.Classes
         #endregion
 
         #region Utensil
-        public Utensil? GetUtensil(int id) 
+        public Utensil? GetUtensilByID(int id) 
         {
             Utensil? result = null;
             try
@@ -394,7 +394,7 @@ namespace KuechenQuestAPI.Classes
                                              IMAGE
                                              FROM Utensil
                                              WHERE ID = {0}",id);
-                this._connection.Open();
+                this.connection.Open();
                 MySqlDataReader reader = this.ExecuteQuery(sql);
                 result = new Utensil();
                 while (reader.Read())
@@ -422,7 +422,7 @@ namespace KuechenQuestAPI.Classes
                                              NAME,
                                              IMAGE
                                              FROM Utensil");
-                this._connection.Open();
+                this.connection.Open();
                 MySqlDataReader reader = this.ExecuteQuery(sql);
                 while (reader.Read())
                 {
@@ -451,11 +451,11 @@ namespace KuechenQuestAPI.Classes
                                              Utensil(NAME,IMAGE)
                                              VALUES
                                              ('{0}',{1})", utensil.NAME, utensil.IMAGE);
-                this._connection.Open();
+                this.connection.Open();
                 this.ExecuteQuery(sql);
-                this._connection.Close();
+                this.connection.Close();
 
-                result = this.GetUtensil(this.GetLastInsertedID());
+                result = this.GetUtensilByID(this.GetLastInsertedID());
             }
             catch (Exception)
             {
@@ -474,11 +474,11 @@ namespace KuechenQuestAPI.Classes
                                                 IMAGE = '{1}'
                                              WHERE
                                                 ID = {2}",utensil.NAME,utensil.IMAGE,utensil.ID);
-                this._connection.Open();
+                this.connection.Open();
                 this.ExecuteQuery(sql); 
-                this._connection.Close();
+                this.connection.Close();
 
-                result = this.GetUtensil(utensil.ID);
+                result = this.GetUtensilByID(utensil.ID);
             }
             catch (Exception)
             {
@@ -493,9 +493,9 @@ namespace KuechenQuestAPI.Classes
             try
             {
                 string sql = string.Format(@"DELETE FROM Utensil WHERE ID = {0};",id);
-                this._connection.Open();
+                this.connection.Open();
                 this.ExecuteQuery(sql);
-                this._connection.Close();
+                this.connection.Close();
 
                 result = true;
             }
@@ -515,7 +515,7 @@ namespace KuechenQuestAPI.Classes
             try
             {
                 string sql = string.Format(@"SELECT ID,NAME,CATEGORY,IMAGE FROM Ingredient WHERE ID = {0}",id);
-                this._connection.Open();
+                this.connection.Open();
                 MySqlDataReader reader = this.ExecuteQuery(sql);
                 while (reader.Read())
                 {
@@ -532,7 +532,7 @@ namespace KuechenQuestAPI.Classes
             }
             finally
             {
-                this._connection.Close();
+                this.connection.Close();
             }
 
             return ingredient;
@@ -543,7 +543,7 @@ namespace KuechenQuestAPI.Classes
             try
             {
                 string sql = string.Format(@"SELECT ID,NAME,CATEGORY,IMAGE FROM Ingredient;");
-                this._connection.Open();
+                this.connection.Open();
                 MySqlDataReader reader = this.ExecuteQuery(sql);
                 while (reader.Read())
                 {
@@ -555,7 +555,7 @@ namespace KuechenQuestAPI.Classes
 
                     ingredients.Add(ingredient);
                 }
-                this._connection.Close();
+                this.connection.Close();
             }
             catch (Exception)
             {
@@ -572,9 +572,9 @@ namespace KuechenQuestAPI.Classes
                 string sql = string.Format(@"INSERT INTO 
                                              Ingredient(NAME,IMAGE,CATEGORY)
                                              VALUES ('{0}','{1}',{2})", result.NAME, result.IMAGE, result.CATEGORY);
-                this._connection.Open();
+                this.connection.Open();
                 this.ExecuteQuery(sql);
-                this._connection.Close();
+                this.connection.Close();
 
                 result = this.GetIngredientByID(this.GetLastInsertedID());
             }
@@ -595,9 +595,9 @@ namespace KuechenQuestAPI.Classes
                                              CATEGORY = {1},
                                              IMAGE = '{2}'
                                              WHERE ID = {3}", ingredient.NAME, ingredient.CATEGORY, ingredient.IMAGE, ingredient.ID);
-                this._connection.Open();
+                this.connection.Open();
                 this.ExecuteQuery(sql);
-                this._connection.Close();
+                this.connection.Close();
             }
             catch (Exception)
             {
@@ -616,7 +616,7 @@ namespace KuechenQuestAPI.Classes
             {
                 string sql = string.Format(@"SELECT ID, NAME FROM Difficulty;");
                 MySqlDataReader reader = this.ExecuteQuery(sql);
-                this._connection.Open();
+                this.connection.Open();
                 while (reader.Read())
                 {
                     Difficulty difficulty = new Difficulty();
@@ -625,7 +625,7 @@ namespace KuechenQuestAPI.Classes
 
                     result.Add(difficulty);
                 }
-                this._connection.Close();
+                this.connection.Close();
             }
             catch (Exception)
             {
@@ -640,7 +640,7 @@ namespace KuechenQuestAPI.Classes
             try
             {
                 string sql = string.Format(@"SELECT NAME FROM Difficulty;");
-                this._connection.Open();
+                this.connection.Open();
                 MySqlDataReader reader = this.ExecuteQuery(sql);
                 while (reader.Read())
                 {
@@ -650,7 +650,7 @@ namespace KuechenQuestAPI.Classes
 
                     result.Add(category);
                 }
-                this._connection.Close();
+                this.connection.Close();
             }
             catch (Exception)
             {
@@ -662,7 +662,7 @@ namespace KuechenQuestAPI.Classes
 
         private MySqlDataReader ExecuteQuery(string sql)
         {
-            using (MySqlCommand command = new MySqlCommand(sql, this._connection))
+            using (MySqlCommand command = new MySqlCommand(sql, this.connection))
             {
                 return command.ExecuteReader();
             }
@@ -670,7 +670,7 @@ namespace KuechenQuestAPI.Classes
         private int GetLastInsertedID()
         {
             string sql = string.Format(@"SELECT LAST_INSERT_ID() as 'ID';");
-            this._connection.Open();
+            this.connection.Open();
             MySqlDataReader reader = this.ExecuteQuery(sql);
             int i = 0;
             while (reader.Read())
@@ -678,7 +678,7 @@ namespace KuechenQuestAPI.Classes
                 i = reader.GetInt32("ID");
                 break;
             }
-            this._connection.Close();
+            this.connection.Close();
 
             return i;
         }

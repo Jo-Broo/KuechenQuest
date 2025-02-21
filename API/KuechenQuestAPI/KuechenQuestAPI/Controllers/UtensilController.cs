@@ -21,7 +21,7 @@ namespace KuechenQuestAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult GetUtensil(int id)
         {
-            Utensil? result = this.database.GetUtensil(id);
+            Utensil? result = this.database.GetUtensilByID(id);
             if (result == null) { return new StatusCodeResult(500); }
             return Ok(JsonSerializer.Serialize(result));
         }
