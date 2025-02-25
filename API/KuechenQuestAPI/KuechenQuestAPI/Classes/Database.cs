@@ -457,8 +457,8 @@ namespace KuechenQuestAPI.Classes
                     utensil.IMAGE = reader.GetString("image");
 
                     result.Add(utensil);
-                    break;
                 }
+                this.connection.Close();
             }
             catch (Exception)
             {
