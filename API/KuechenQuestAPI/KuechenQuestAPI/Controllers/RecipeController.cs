@@ -49,5 +49,13 @@ namespace KuechenQuestAPI.Controllers
             if (result == false) { return new StatusCodeResult(500); }
             return Ok();
         }
+
+        [HttpGet("Difficulty")]
+        public IActionResult GetAllDifficultys()
+        {
+            List<Difficulty> difficulties = this.database.GetDifficulty();
+            if(difficulties.Count == 0) { return StatusCode(500); }
+            return Ok(JsonSerializer.Serialize(difficulties));
+        }
     }
 }

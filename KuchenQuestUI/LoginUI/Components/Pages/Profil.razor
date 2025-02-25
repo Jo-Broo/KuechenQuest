@@ -1,4 +1,5 @@
 ﻿@page "/profil"
+@using LoginUI.Components.Models
 @using LoginUI.Components.Service
 @inject HttpClient Http
 @inject NavigationManager Navigation
@@ -10,7 +11,6 @@
 <div class="profile-container">
     <!-- Profilbild & Name -->
     <div class="profile-info">
-        @* <img src="@User.CurrentUser.IMAGE" class="profile-pic" /> *@
         <img src="@ProfilbildUrl" class="profile-pic" />
         <h2>@User.CurrentUser.Name</h2>
     </div>
@@ -18,7 +18,7 @@
     <!-- XP Bar -->
     <div class="xp-container">
         <div class="xp-bar" style="width: @(XPProgress)%"></div>
-        <span>Level @User.CurrentUser.Level</span>
+        <span>Level @User.CurrentUser.Level (@User.CurrentUser.XP/@(@User.CurrentUser.Level*100))</span>
     </div>
 
     <!-- Erfolge -->
@@ -30,12 +30,17 @@
         <div class="content">
             @if (Erfolge.Count > 0)
             {
-                @foreach (var erfolg in Erfolge)
-                {
-                    <div class="erfolg-item @(erfolg.Erreicht ? "reached" : "not-reached")">
-                        @erfolg.Name
-                    </div>
-                }
+                <div class="erfolg-item reached">
+                    <table width="100%">
+                        @foreach (var erfolg in Erfolge)
+                        {
+                            <tr>
+                                <td width="25%">@erfolg.NAME</td>
+                                <td width="75%">@erfolg.DESCRIPTION</td>
+                            </tr>
+                        }
+                    </table>
+                </div>
             }
             else
             {
@@ -62,7 +67,7 @@
             }
             else
             {
-                <p>Keine Zutaten gefunden.</p>
+                <p>Keine Zutaten gefunden.<br />(Coming Soon)</p>
             }
         </div>
     }
@@ -73,78 +78,44 @@
 @code {
     private string Username = "Lädt..."; // Der Name des Benutzers
     private string ProfilbildUrl = "http://192.168.37.240:80/Images/Placeholder.png"; // Das Profilbild des Benutzers
-    private int Level = 0; // Das Level des Benutzers
-    private int XP = 0; // Die XP des Benutzers
-    private int XPMax = 100; // Maximal XP für den Fortschritt (kann von der API kommen)
-    private int XPProgress => XPMax > 0 ? (XP * 100) / XPMax : 0; // Berechnung des XP Fortschritts
 
     private bool ShowErfolge = false; // Anzeige der Erfolge
     private bool ShowZutaten = false; // Anzeige der Zutaten
 
-    private List<Erfolg> Erfolge = new(); // Liste der Erfolge
+    private List<Achievement> Erfolge = new(); // Liste der Erfolge
     private List<Zutat> Zutaten = new(); // Liste der Zutaten
 
-    // Variablen für die Benutzerdaten
-    private string CurrentUsername = "TestUser"; // Hier gib den Benutzernamen ein
-    private string CurrentPassword = "TestPass"; // Hier gib das Passwort ein
-
-    protected override async Task OnInitializedAsync()
+    async Task GetAchievments()
     {
         try
         {
-            // POST-Request an die API, um Benutzerdaten abzurufen
-            var loginData = new { username = CurrentUsername, password = CurrentPassword };
-            var response = await Http.PostAsJsonAsync("https://192.168.37.240:7067/KuechenQuest/User", loginData);
+            // Direktes Erstellen des anonymen Objekts und Senden der POST-Anfrage
+            var response = await Http.GetAsync($"https://192.168.37.240:7067/KuechenQuest/User/Achievement/{User.CurrentUser.Id}");
 
             if (response.IsSuccessStatusCode)
             {
-                // Antwort von der API parsen
-                var userData = await response.Content.ReadFromJsonAsync<UserData>();
-                if (userData != null)
+                List<Achievement>? result = await response.Content.ReadFromJsonAsync<List<Achievement>>();
+
+                if (result != null)
                 {
-                    // Die empfangenen Benutzerdaten in Variablen setzen
-                    Username = userData.Name;
-                    ProfilbildUrl = userData.Email ?? "images/profile-placeholder.png"; // Optional: Hier könnte auch das Profilbild kommen
-                    Level = userData.Level;
-                    XP = userData.XP;
-                    XPMax = 100; // Beispielwert, kann von der API kommen
+                    this.Erfolge = result;
                 }
             }
-            else
-            {
-                Console.WriteLine("Fehler beim Abrufen der Benutzerdaten.");
-            }
-
-            // Erfolge von der API abrufen
-            var erfolgeData = await Http.GetFromJsonAsync<List<Erfolg>>("https://192.168.50.240:7067/KuechenQuest/Erfolge");
-            if (erfolgeData != null)
-                Erfolge = erfolgeData;
-
-            // Zutaten von der API abrufen
-            var zutatenData = await Http.GetFromJsonAsync<List<Zutat>>("https://192.168.50.240:7067/KuechenQuest/Zutaten");
-            if (zutatenData != null)
-                Zutaten = zutatenData;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"Fehler beim Laden der Daten: {ex.Message}");
+            this.Erfolge = new();
         }
     }
+    void GetIngredients(){}
 
-    private void ToggleErfolge() => ShowErfolge = !ShowErfolge;
+    private async Task ToggleErfolge()
+    {
+        await GetAchievments();
+        ShowErfolge = !ShowErfolge;
+    }
     private void ToggleZutaten() => ShowZutaten = !ShowZutaten;
 
-    // Datenklassen anpassen, um der API-Antwort zu entsprechen
-    private class UserData
-    {
-        public int ID { get; set; }
-        public string Name { get; set; } = "";  // Der Benutzername kommt jetzt als "Name"
-        public string Email { get; set; } = "";  // Hier könnte man die E-Mail für das Profilbild verwenden
-        public int Level { get; set; }
-        public int XP { get; set; }
-    }
-
-    private class Erfolg { public string Name { get; set; } = ""; public bool Erreicht { get; set; } = false; }
     private class Zutat { public string Name { get; set; } = ""; public int Level { get; set; } = 1; }
 
     private void BackToHomescreen()

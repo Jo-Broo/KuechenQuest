@@ -101,7 +101,32 @@ namespace KuechenQuestAPI.Classes
 
             return user;
         }
-        public List<Achievment> GetAchievments(string username) { throw new NotImplementedException(); }
+        public List<Achievment> GetAchievments(int userid) 
+        {
+            List<Achievment> achievments = new List<Achievment>();
+            try
+            {
+                string sql = string.Format(@"select * FROM user_achievement ua LEFT JOIN Achievement a on ua.AchievementID = a.ID where ua.UserID = {0}", userid);
+                this.connection.Open();
+                MySqlDataReader reader = this.ExecuteQuery(sql);
+                while (reader.Read())
+                {
+                    Achievment achievment = new Achievment();
+                    achievment.ID = reader.GetInt32("ID");
+                    achievment.NAME = reader.GetString("NAME");
+                    achievment.DESCRIPTION = reader.GetString("DESCRIPTION");
+                    achievment.IMAGE = reader.GetString("IMAGE");
+                    achievment.TIME = reader.GetDateTime("TIME");
+                    achievments.Add(achievment);
+                }
+            }
+            catch (Exception)
+            {
+                achievments = new List<Achievment>();
+            }
+
+            return achievments;
+        }
         #endregion
 
         #region Rezept
@@ -614,9 +639,9 @@ namespace KuechenQuestAPI.Classes
             List<Difficulty> result = new List<Difficulty>();
             try
             {
-                string sql = string.Format(@"SELECT ID, NAME FROM Difficulty;");
-                MySqlDataReader reader = this.ExecuteQuery(sql);
+                string sql = string.Format(@"SELECT ID, NAME FROM Difficulty");
                 this.connection.Open();
+                MySqlDataReader reader = this.ExecuteQuery(sql);
                 while (reader.Read())
                 {
                     Difficulty difficulty = new Difficulty();
