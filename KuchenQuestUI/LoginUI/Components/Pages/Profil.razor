@@ -31,12 +31,12 @@
             @if (Erfolge.Count > 0)
             {
                 <div class="erfolg-item reached">
-                    <table width="100%">
+                    <table width="100%" style="text-align:left">
                         @foreach (var erfolg in Erfolge)
                         {
                             <tr>
-                                <td width="25%">@erfolg.NAME</td>
-                                <td width="75%">@erfolg.DESCRIPTION</td>
+                                <td width="40%" style="border-right: 2px solid; padding: 5px 0px 0px 0px">@erfolg.NAME</td>
+                                <td width="60%" style="padding:5px 0px 0px 10px">@erfolg.DESCRIPTION</td>
                             </tr>
                         }
                     </table>
