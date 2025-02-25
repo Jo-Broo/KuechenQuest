@@ -20,9 +20,8 @@
     <!-- Rezeptliste -->
     <div class="recipe-list">
         
-        <div class="recipe-card highlight">
-            <span class="indicator"></span>
-            <img src="wwwroot/muffins.jpg" alt="Highlight des Tages" class="recipe-img" />
+        <div class="recipe-card highlight">        
+            <img src="/images/muffin.png" alt="Highlight des Tages" class="recipe-img" />
             <div class="recipe-title">Highlight des Tages</div>
         </div>
         <div class="recipe-card"><span class="indicator"></span>Probier was Neues</div>
@@ -46,13 +45,11 @@
 
 @code {
     private bool IsSidebarOpen = false;
-
-    private string SidebarStyle => IsSidebarOpen
-        ? "left: 0;"
-        : "left: -50%;";
+    private string SidebarStyle => IsSidebarOpen ? "left: 0;" : "left: -60%;";
 
     private void ToggleSidebar()
     {
         IsSidebarOpen = !IsSidebarOpen;
     }
+
 }
