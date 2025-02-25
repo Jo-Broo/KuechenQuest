@@ -10,7 +10,8 @@ CREATE TABLE Difficulty(
 CREATE TABLE Utensil(
     ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     NAME VARCHAR(50) NOT NULL,
-    IMAGE VARCHAR(255) DEFAULT NULL
+    IMAGE VARCHAR(255) DEFAULT NULL,
+    CONSTRAINT Unique_Utensil UNIQUE(NAME)
 );
 
 CREATE TABLE Category(
@@ -21,7 +22,9 @@ CREATE TABLE Category(
 CREATE TABLE Achievement( 
     ID INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     NAME VARCHAR(255) NOT NULL,
-    IMAGE VARCHAR(255) DEFAULT NULL
+    DESCRIPTION VARCHAR(255) NOT NULL,
+    IMAGE VARCHAR(255) DEFAULT NULL,
+    CONSTRAINT Unique_Achievement UNIQUE(NAME)
 );
 
 CREATE TABLE Ingredient(
@@ -30,7 +33,8 @@ CREATE TABLE Ingredient(
     IMAGE VARCHAR(255) DEFAULT NULL,
     CATEGORY INT NOT NULL,
     CONSTRAINT fk_Category
-        FOREIGN KEY (CATEGORY) REFERENCES Category(ID)
+        FOREIGN KEY (CATEGORY) REFERENCES Category(ID),
+    CONSTRAINT Unique_Ingredient UNIQUE(NAME)
 );
 
 CREATE TABLE User (
@@ -97,11 +101,11 @@ CREATE TABLE User_Achievement(
 
 INSERT INTO Difficulty(NAME) VALUES ('Leicht'), ('Mittel'), ('Schwer');
 
-INSERT INTO User(NAME, EMAIL, PASSWORD) VALUES
-('Niklas', 'Niklas@email.de', 'Admin'),
-('Florian', 'Florian@email.de', 'Admin'),
-('Cornelius', 'Cornelius@email.de', 'Admin'),
-('Jonas', 'Jonas@email.de', 'Admin');
+INSERT INTO User(NAME, EMAIL, PASSWORD, LEVEL, XP) VALUES
+('Niklas', 'Niklas@email.de', 'Admin',5,20),
+('Florian', 'Florian@email.de', 'Admin',7,4),
+('Cornelius', 'Cornelius@email.de', 'Admin',1,15),
+('Jonas', 'Jonas@email.de', 'Admin',10,70);
 
 INSERT INTO Utensil (NAME, IMAGE) VALUES 
 ('Löffel', '\\Bilder\\x.png'),
@@ -121,6 +125,14 @@ INSERT INTO Ingredient (NAME, CATEGORY, IMAGE) VALUES
 ('Butter', 4, '\\Bilder\\x.png'),
 ('Tomate', 2, '\\Bilder\\x.png');
 
+INSERT INTO Achievement (NAME,DESCRIPTION,IMAGE) VALUES
+('Starter','Hat das erste Rezept gekocht','bild.png'),
+('Kleiner Koch','Hat 5 Rezepte gekocht','bild.png'),
+('Ueberflieger','Hat 10 Rezepte gekocht','bild.png');
+
+INSERT INTO User_Achievement(USERID,ACHIEVEMENTID) VALUES
+(4,1),
+(4,2);
 -- Rezept für Pfannkuchen
 INSERT INTO Recipe(NAME, TIME, DIFFICULTY, INSTRUCTIONS, CREATEDBY, IMAGE)
 VALUES ('Pfannkuchen',20,2,'Alle Zutaten vermengen und in der Pfanne ausbacken.', 1, '\\Bilder\\x.png');
