@@ -34,12 +34,14 @@
     border-radius: 5px;
     border: none;
     margin-top: 10px;
+    background: #3e3e5a;
 }
 
 .filter-btn {
     padding: 8px 15px;
-    background: #28a745;
-    border: none;
+    background: #3e3e5a;
+    border: thin;
+    border-color: white;
     color: white;
     cursor: pointer;
     margin-left: 10px;
@@ -50,13 +52,58 @@
     margin-top: 20px;
 }
 
-.recipe-card {
-    background: #3e3e5a;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    animation: fadeIn 0.5s ease-in-out;
+.recipe-title {
+
 }
+
+.recipe-card {
+    position: relative; /* Wichtig für absolutes Positionieren des Indikators */
+    display: flex;
+    flex-direction: column; /* Bild und Text übereinander anordnen */
+    align-items: center; /* Optional: Inhalt mittig in der Breite */
+    background: #3e3e5a;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    overflow: hidden; /* Falls man object-fit: cover nutzt */
+}
+
+    /* Indikator oben links */
+    .recipe-card .indicator {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 10px;
+        height: 10px;
+        background: lime;
+        border-radius: 50%;
+    }
+
+    /* Rezeptbild */
+    .recipe-card .recipe-img {
+        width: 100%; /* Füllt die Breite der Card aus */
+        max-height: 200px; /* Sorgt dafür, dass das Bild nicht zu hoch wird */
+        object-fit: cover; /* Bild ggf. zentriert, kann oben/unten Beschnitt haben */
+        border-radius: 8px;
+        margin-bottom: 10px; /* Abstand zum Titel / Text */
+        display: block; /* Vorsichtshalber block-Layout */
+    }
+
+/* Titel bzw. Text */
+.recipe-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: center; /* oder left, je nach Geschmack */
+}
+
+
+
+.recipe-card.highlight {
+    /* wenn du den "Highlight des Tages" noch etwas hervorheben willst,
+       könntest du es zum Beispiel etwas heller oder mit Schatten machen: */
+    box-shadow: 0 0 4px rgba(255,255,255,0.2);
+}
+
 
 /*Green Point*/
 
@@ -81,14 +128,15 @@
 .sidebar {
     position: fixed;
     top: 0;
-    left: -50%;
-    width: 50%;
+    left: -60%;
+    width: 60%;
     height: 100%;
     background: linear-gradient(to bottom, #4CAF50, #3C3C5A);
-    transition: transform 0.3s ease-in-out;
+    transition: left 0.3s ease-in-out;
     padding: 15px;
     box-shadow: 3px 0px 10px rgba(0, 0, 0, 0.3);
     border-radius: 0 10px 10px 0;
+    z-index: 9999;
 }
 
 .close-btn {
