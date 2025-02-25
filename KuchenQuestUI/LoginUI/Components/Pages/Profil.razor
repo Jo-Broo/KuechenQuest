@@ -1,5 +1,8 @@
 ﻿@page "/profil"
+@using LoginUI.Components.Service
 @inject HttpClient Http
+@inject NavigationManager Navigation
+@inject UserService User
 
 <link rel="stylesheet" href="css/profil.css">
 
@@ -7,14 +10,15 @@
 <div class="profile-container">
     <!-- Profilbild & Name -->
     <div class="profile-info">
+        @* <img src="@User.CurrentUser.IMAGE" class="profile-pic" /> *@
         <img src="@ProfilbildUrl" class="profile-pic" />
-        <h2>@Username</h2>
+        <h2>@User.CurrentUser.Name</h2>
     </div>
 
     <!-- XP Bar -->
     <div class="xp-container">
         <div class="xp-bar" style="width: @(XPProgress)%"></div>
-        <span>Level @Level</span>
+        <span>Level @User.CurrentUser.Level</span>
     </div>
 
     <!-- Erfolge -->
@@ -62,11 +66,13 @@
             }
         </div>
     }
+
+    <button @onclick="BackToHomescreen">Zurück</button>
 </div>
 
 @code {
     private string Username = "Lädt..."; // Der Name des Benutzers
-    private string ProfilbildUrl = "images/profile-placeholder.png"; // Das Profilbild des Benutzers
+    private string ProfilbildUrl = "http://192.168.37.240:80/Images/Placeholder.png"; // Das Profilbild des Benutzers
     private int Level = 0; // Das Level des Benutzers
     private int XP = 0; // Die XP des Benutzers
     private int XPMax = 100; // Maximal XP für den Fortschritt (kann von der API kommen)
@@ -88,7 +94,7 @@
         {
             // POST-Request an die API, um Benutzerdaten abzurufen
             var loginData = new { username = CurrentUsername, password = CurrentPassword };
-            var response = await Http.PostAsJsonAsync("https://192.168.50.240:7067/KuechenQuest/User", loginData);
+            var response = await Http.PostAsJsonAsync("https://192.168.37.240:7067/KuechenQuest/User", loginData);
 
             if (response.IsSuccessStatusCode)
             {
@@ -140,4 +146,9 @@
 
     private class Erfolg { public string Name { get; set; } = ""; public bool Erreicht { get; set; } = false; }
     private class Zutat { public string Name { get; set; } = ""; public int Level { get; set; } = 1; }
+
+    private void BackToHomescreen()
+    {
+        Navigation.NavigateTo("/start");
+    }
 }
