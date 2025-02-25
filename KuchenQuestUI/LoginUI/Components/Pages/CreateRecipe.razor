@@ -1,0 +1,175 @@
+@page "/createrecipe"
+
+@inject HttpClient Http
+
+@code {
+    private string RecipeName { get; set; } = string.Empty;
+    private int TimeRequired { get; set; } = 0;
+    private string Instructions { get; set; } = string.Empty;
+    private string IngredientInput { get; set; } = string.Empty;
+    private string IngredientQuantity { get; set; } = string.Empty;
+    private string UtensilInput { get; set; } = string.Empty;
+    private string UtensilQuantity { get; set; } = string.Empty;
+    private string SelectedDifficulty { get; set; } = "Leicht";
+    private List<(string Name, string Quantity)> Ingredients { get; set; } = new();
+    private List<(string Name, string Quantity)> Utensils { get; set; } = new();
+    private bool ShowPopup { get; set; } = false;
+    private bool ShowUtensilPopup { get; set; } = false;
+
+    private void AddIngredient()
+    {
+        if (!string.IsNullOrWhiteSpace(IngredientInput) && !string.IsNullOrWhiteSpace(IngredientQuantity))
+        {
+            Ingredients.Add((IngredientInput, IngredientQuantity));
+            IngredientInput = string.Empty;
+            IngredientQuantity = string.Empty;
+        }
+    }
+
+    private void AddUtensil()
+    {
+        if (!string.IsNullOrWhiteSpace(UtensilInput) && !string.IsNullOrWhiteSpace(UtensilQuantity))
+        {
+            Utensils.Add((UtensilInput, UtensilQuantity));
+            UtensilInput = string.Empty;
+            UtensilQuantity = string.Empty;
+        }
+    }
+
+    private void RemoveIngredient((string Name, string Quantity) ingredient)
+    {
+        Ingredients.Remove(ingredient);
+    }
+
+    private void RemoveUtensil((string Name, string Quantity) utensil)
+    {
+        Utensils.Remove(utensil);
+    }
+
+    private async Task SubmitRecipe()
+    {
+        var recipe = new
+        {
+            id = 0,
+            name = RecipeName,
+            time = TimeRequired,
+            difficulty = SelectedDifficulty,
+            instructions = Instructions,
+            rating = 0,
+            ratingcount = 0,
+            createdby = 0,
+            ingredients = Ingredients.Select(i => new { id = 0, name = i.Name, category = 0, quantity = i.Quantity, image = "" }).ToList(),
+            utensils = Utensils.Select(u => new { id = 0, name = u.Name, quantity = u.Quantity, image = "" }).ToList(),
+            user = new { id = 0, name = "", level = 0, xp = 0, email = "" },
+            image = ""
+        };
+
+        await Http.PostAsJsonAsync("https://192.168.37.240:7067/KuechenQuest/Recipe", recipe);
+    }
+}
+
+<div class="recipe-container">
+    <h2>Rezept erstellen</h2>
+    <label>Rezeptname:</label>
+    <input @bind="RecipeName" />
+
+    <label>Schwierigkeit:</label>
+    <select @bind="SelectedDifficulty">
+        <option>Leicht</option>
+        <option>Mittel</option>
+        <option>Schwer</option>
+    </select>
+
+    <label>Zutaten:</label>
+    <div class="input-group">
+        <input @bind="IngredientInput" placeholder="Zutat hinzuf¸gen..." />
+        <input @bind="IngredientQuantity" placeholder="Menge" />
+        <button @onclick="AddIngredient">+</button>
+        <button @onclick="() => ShowPopup = true">-</button>
+    </div>
+    <p>@string.Join(", ", Ingredients.Select(i => $"{i.Name} ({i.Quantity})"))</p>
+
+    <label>Utensilien:</label>
+    <div class="input-group">
+        <input @bind="UtensilInput" placeholder="Utensil hinzuf¸gen..." />
+        <input @bind="UtensilQuantity" placeholder="Menge" />
+        <button @onclick="AddUtensil">+</button>
+        <button @onclick="() => ShowUtensilPopup = true">-</button>
+    </div>
+    <p>@string.Join(", ", Utensils.Select(u => $"{u.Name} ({u.Quantity})"))</p>
+
+    <label>Zeitaufwand (Minuten):</label>
+    <input type="number" @bind="TimeRequired" />
+
+    <label>Zubereitung:</label>
+    <textarea @bind="Instructions"></textarea>
+
+    <button @onclick="SubmitRecipe">Absenden</button>
+</div>
+
+@if (ShowPopup)
+{
+    <div class="popup">
+        <h3>Zutaten entfernen</h3>
+        @foreach (var ingredient in Ingredients)
+        {
+            <div class="popup-item">
+                <span>@ingredient.Name (@ingredient.Quantity)</span>
+                <button @onclick="() => RemoveIngredient(ingredient)">X</button>
+            </div>
+        }
+        <button @onclick="() => ShowPopup = false">Schlieﬂen</button>
+    </div>
+}
+
+@if (ShowUtensilPopup)
+{
+    <div class="popup">
+        <h3>Utensilien entfernen</h3>
+        @foreach (var utensil in Utensils)
+        {
+            <div class="popup-item">
+                <span>@utensil.Name (@utensil.Quantity)</span>
+                <button @onclick="() => RemoveUtensil(utensil)">X</button>
+            </div>
+        }
+        <button @onclick="() => ShowUtensilPopup = false">Schlieﬂen</button>
+    </div>
+}
+
+<style>
+    .recipe-container {
+        background: #2d2d3d;
+        padding: 20px;
+        border-radius: 10px;
+        color: white;
+    }
+
+    .input-group {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    input, textarea {
+        flex: 1;
+        padding: 8px;
+        border-radius: 5px;
+        border: none;
+    }
+
+    button {
+        background: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    p {
+        background: #3d3d5c;
+        padding: 10px;
+        border-radius: 5px;
+    }
+</style>
