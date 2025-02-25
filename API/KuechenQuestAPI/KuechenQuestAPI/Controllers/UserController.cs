@@ -55,5 +55,17 @@ namespace KuechenQuestAPI.Controllers
             return CreatedAtAction(nameof(GetUser), new { id = result.ID }, result);
         }
 
+        [HttpGet("Achievement/{UserID}")]
+        public IActionResult GetAchievmentsByUserID(int UserID)
+        {
+            List<Achievment> achievments = this.database.GetAchievments(UserID);
+
+            if (achievments.Count == 0)
+            {
+                return StatusCode(500);
+            }
+
+            return Ok(JsonSerializer.Serialize(achievments));
+        }
     }
 }
