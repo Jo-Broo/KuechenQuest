@@ -1,0 +1,102 @@
+
+.shopping-container {
+	width: 100vw;
+	height: 100vh;
+	background-color: #2f2f48;
+	color: white;
+	padding: 20px;
+	box-sizing: border-box;
+	overflow-y: auto; /* falls viele Artikel */
+	font-family: sans-serif;
+}
+
+/* Header */
+.header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 10px;
+}
+
+.menu-icon {
+	width: 30px;
+	cursor: pointer;
+}
+
+.app-logo {
+	width: 40px;
+	height: auto;
+}
+
+/* Suchleiste */
+.search-area {
+	display: flex;
+	align-items: center;
+	background: #3e3e5a;
+	border-radius: 8px;
+	padding: 5px 10px;
+	width: 80%;
+	max-width: 400px;
+	margin-bottom: 20px;
+}
+
+.search-icon {
+	width: 24px;
+	height: 24px;
+	margin-right: 5px;
+}
+
+.search-input {
+	flex: 1;
+	border: none;
+	background: transparent;
+	color: white;
+	font-size: 1rem;
+	outline: none;
+}
+
+/* Kategorie-Karten */
+.category-card {
+	background: #3e3e5a;
+	padding: 10px;
+	border-radius: 8px;
+	font-size: 1rem;
+	margin-top: 10px;
+}
+
+/* Zeile mit Artikeln */
+.item-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-top: 10px;
+}
+
+/* Artikel-Karten */
+.item-card {
+	background: #555576;
+	padding: 8px;
+	border-radius: 8px;
+	cursor: pointer;
+	text-align: center;
+	min-width: 80px;
+	transition: background 0.3s;
+}
+
+/* Noch nicht ausgewählt -> grau */
+.not-selected {
+	background: #555576;
+}
+
+/* Ausgewählt -> grün */
+.selected {
+	background: #28a745;
+}
+
+/* Anzeige der gewählten Artikel (unten oder wo auch immer) */
+.shopping-list-display {
+	background: #3e3e5a;
+	margin-top: 20px;
+	padding: 10px;
+	border-radius: 8px;
+}
