@@ -40,6 +40,7 @@ CREATE TABLE User (
     LEVEL TINYINT DEFAULT 1 NOT NULL,
     XP INT DEFAULT 1 NOT NULL,
     EMAIL VARCHAR(255) NOT NULL,
+    IMAGE VARCHAR(255) DEFAULT 'Images/Placeholder.png',
     UNIQUE (NAME),         
     UNIQUE (EMAIL),        
     CONSTRAINT Unique_User UNIQUE (NAME, EMAIL) 
@@ -103,26 +104,26 @@ INSERT INTO User(NAME, EMAIL, PASSWORD) VALUES
 ('Jonas', 'Jonas@email.de', 'Admin');
 
 INSERT INTO Utensil (NAME, IMAGE) VALUES 
-('Löffel', '\\Bilder\\xxx.png'),
-('Messer', '\\Bilder\\xxx.png'),
-('Schneidebrett', '\\Bilder\\xxx.png'),
-('Pfanne', '\\Bilder\\xxx.png'),
-('Rührbesen', '\\Bilder\\xxx.png'),
-('Schüssel', '\\Bilder\\xxx.png');
+('Löffel', '\\Bilder\\x.png'),
+('Messer', '\\Bilder\\x.png'),
+('Schneidebrett', '\\Bilder\\x.png'),
+('Pfanne', '\\Bilder\\x.png'),
+('Rührbesen', '\\Bilder\\x.png'),
+('Schüssel', '\\Bilder\\x.png');
 
 INSERT INTO Category (NAME) VALUES ('Unkategorisiert'), ('Obst/Gemuese'), ('Fleisch'), ('Milchprodukte');
 
 INSERT INTO Ingredient (NAME, CATEGORY, IMAGE) VALUES 
-('Mehl', 1, '\\Bilder\\xxx.png'),
-('Zucker', 1, '\\Bilder\\xxx.png'),
-('Eier', 1, '\\Bilder\\xxx.png'),
-('Milch', 4, '\\Bilder\\xxx.png'),
-('Butter', 4, '\\Bilder\\xxx.png'),
-('Tomate', 2, '\\Bilder\\xxx.png');
+('Mehl', 1, '\\Bilder\\x.png'),
+('Zucker', 1, '\\Bilder\\x.png'),
+('Eier', 1, '\\Bilder\\x.png'),
+('Milch', 4, '\\Bilder\\x.png'),
+('Butter', 4, '\\Bilder\\x.png'),
+('Tomate', 2, '\\Bilder\\x.png');
 
 -- Rezept für Pfannkuchen
 INSERT INTO Recipe(NAME, TIME, DIFFICULTY, INSTRUCTIONS, CREATEDBY, IMAGE)
-VALUES ('Pfannkuchen',20,2,'Alle Zutaten vermengen und in der Pfanne ausbacken.', 1, '\\Bilder\\xxx.png');
+VALUES ('Pfannkuchen',20,2,'Alle Zutaten vermengen und in der Pfanne ausbacken.', 1, '\\Bilder\\x.png');
 -- Zutaten speichern
 INSERT INTO Recipe_Ingredient(RECIPEID, INGREDIENTID, QUANTITY)
 VALUES 

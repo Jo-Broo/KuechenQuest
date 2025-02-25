@@ -16,11 +16,5 @@ namespace KuechenQuestAPI.Models
         public List<Utensil> Utensils { get; set; } = new List<Utensil> { };
         public User User { get; set; } = new User();
         public string IMAGE { get; set; } = string.Empty;
-
-        public static Recipe CreateFromJson(string? json)
-        {
-            if(json == null) { return new Recipe(); }
-            return JsonSerializer.Deserialize<Recipe>(json) ?? new Recipe();
-        }
     }
 }

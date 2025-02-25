@@ -1,6 +1,8 @@
-﻿using LoginUI.Data;
+﻿using LoginUI.Components.Service;
+using LoginUI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Handlers;
 using System.Net.Http;
 
 namespace LoginUI;
@@ -15,8 +17,8 @@ public static class MauiProgram
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("ComicSansMS.ttf", "ComicSansMS"); // Unverändert
-            });
-
+            })
+            .Services.AddSingleton<UserService>();
 
         builder.Services.AddMauiBlazorWebView();
 

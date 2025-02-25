@@ -8,11 +8,5 @@ namespace KuechenQuestAPI.Models
         public string NAME { get; set; } = string.Empty;
         public float QUANTITY { get; set; }
         public string IMAGE { get; set; } = string.Empty;
-
-        public static Utensil CreateFromJson(string? json)
-        {
-            if (json == null) { return new Utensil(); }
-            return JsonSerializer.Deserialize<Utensil>(json) ?? new Utensil();
-        }
     }
 }

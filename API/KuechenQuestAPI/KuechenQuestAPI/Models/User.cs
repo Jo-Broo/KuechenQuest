@@ -7,5 +7,6 @@
         public int LEVEL { get; set; }
         public int XP { get; set; }
         public string EMAIL { get; set; } = string.Empty;
+        public string IMAGE { get; set; } = string.Empty;
     }
 }

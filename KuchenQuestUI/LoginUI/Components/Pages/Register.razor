@@ -40,7 +40,7 @@
         {
             // Sende den POST-Request an den API-Endpunkt mit den Registrierungsdaten im Body
             var registerData = new { Email, Username, Password };
-            var response = await Http.PostAsJsonAsync("https://192.168.50.240:7067/KuechenQuest/User/Register", registerData);
+            var response = await Http.PostAsJsonAsync("https://192.168.37.240:7067/KuechenQuest/User/Register", registerData);
 
             if (response.IsSuccessStatusCode)
             {
