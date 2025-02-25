@@ -1,38 +1,121 @@
 @page "/createrecipe"
-
+@using LoginUI.Components.Models
 @inject HttpClient Http
+@inject NavigationManager Navigation
 
 @code {
     private string RecipeName { get; set; } = string.Empty;
     private int TimeRequired { get; set; } = 0;
     private string Instructions { get; set; } = string.Empty;
-    private string IngredientInput { get; set; } = string.Empty;
-    private string IngredientQuantity { get; set; } = string.Empty;
-    private string UtensilInput { get; set; } = string.Empty;
-    private string UtensilQuantity { get; set; } = string.Empty;
     private string SelectedDifficulty { get; set; } = "Leicht";
     private List<(string Name, string Quantity)> Ingredients { get; set; } = new();
     private List<(string Name, string Quantity)> Utensils { get; set; } = new();
     private bool ShowPopup { get; set; } = false;
     private bool ShowUtensilPopup { get; set; } = false;
 
+    private List<string> AvailableIngredients { get; set; } = new();
+    private List<string> AvailableUtensils { get; set; } = new();
+
+    private string SelectedIngredient { get; set; } = string.Empty;
+    private string SelectedIngredientQuantity { get; set; } = string.Empty;
+    private string SelectedUtensil { get; set; } = string.Empty;
+    private string SelectedUtensilQuantity { get; set; } = string.Empty;
+
+    private User CurrentUser { get; set; } = new(); // Benutzer laden
+
+    private readonly Dictionary<string, int> DifficultyMapping = new()
+    {
+        { "Leicht", 1 },
+        { "Mittel", 2 },
+        { "Schwer", 3 }
+    };
+
+    // Die Modelle für Zutaten und Utensilien
+    public class Ingredient
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int Category { get; set; }
+        public int Quantity { get; set; }
+        public string Image { get; set; }
+    }
+
+    public class Utensil
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int Quantity { get; set; }
+        public string Image { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCurrentUser();
+        await LoadAvailableIngredients();
+        await LoadAvailableUtensils();
+    }
+
+    private async Task LoadCurrentUser()
+    {
+        try
+        {
+            CurrentUser = await Http.GetFromJsonAsync<User>("https://192.168.37.240:7067/KuechenQuest/User/Current");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fehler beim Abrufen des Benutzers: {ex.Message}");
+        }
+    }
+
+    private async Task LoadAvailableIngredients()
+    {
+        try
+        {
+            var ingredients = await Http.GetFromJsonAsync<List<Ingredient>>("https://192.168.37.240:7067/KuechenQuest/Ingredient");
+            if (ingredients != null)
+            {
+                AvailableIngredients = ingredients.Select(i => i.Name).ToList();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fehler beim Abrufen der Zutaten: {ex.Message}");
+        }
+    }
+
+    private async Task LoadAvailableUtensils()
+    {
+        try
+        {
+            var utensils = await Http.GetFromJsonAsync<List<Utensil>>("https://192.168.37.240:7067/KuechenQuest/Utensil");
+            if (utensils != null)
+            {
+                AvailableUtensils = utensils.Select(u => u.Name).ToList();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fehler beim Abrufen der Utensilien: {ex.Message}");
+        }
+    }
+
     private void AddIngredient()
     {
-        if (!string.IsNullOrWhiteSpace(IngredientInput) && !string.IsNullOrWhiteSpace(IngredientQuantity))
+        if (!string.IsNullOrWhiteSpace(SelectedIngredient) && !string.IsNullOrWhiteSpace(SelectedIngredientQuantity))
         {
-            Ingredients.Add((IngredientInput, IngredientQuantity));
-            IngredientInput = string.Empty;
-            IngredientQuantity = string.Empty;
+            Ingredients.Add((SelectedIngredient, SelectedIngredientQuantity));
+            SelectedIngredient = string.Empty;
+            SelectedIngredientQuantity = string.Empty;
         }
     }
 
     private void AddUtensil()
     {
-        if (!string.IsNullOrWhiteSpace(UtensilInput) && !string.IsNullOrWhiteSpace(UtensilQuantity))
+        if (!string.IsNullOrWhiteSpace(SelectedUtensil) && !string.IsNullOrWhiteSpace(SelectedUtensilQuantity))
         {
-            Utensils.Add((UtensilInput, UtensilQuantity));
-            UtensilInput = string.Empty;
-            UtensilQuantity = string.Empty;
+            Utensils.Add((SelectedUtensil, SelectedUtensilQuantity));
+            SelectedUtensil = string.Empty;
+            SelectedUtensilQuantity = string.Empty;
         }
     }
 
@@ -53,18 +136,43 @@
             id = 0,
             name = RecipeName,
             time = TimeRequired,
-            difficulty = SelectedDifficulty,
+            difficulty = DifficultyMapping.GetValueOrDefault(SelectedDifficulty, 1),
             instructions = Instructions,
             rating = 0,
             ratingcount = 0,
-            createdby = 0,
-            ingredients = Ingredients.Select(i => new { id = 0, name = i.Name, category = 0, quantity = i.Quantity, image = "" }).ToList(),
-            utensils = Utensils.Select(u => new { id = 0, name = u.Name, quantity = u.Quantity, image = "" }).ToList(),
-            user = new { id = 0, name = "", level = 0, xp = 0, email = "" },
+            createdby = CurrentUser.Id,
+            ingredients = Ingredients.Select(i => new
+            {
+                id = 0,
+                name = i.Name,
+                category = 0,
+                quantity = int.TryParse(i.Quantity, out int qty) ? qty : 0,
+                image = ""
+            }).ToList(),
+            utensils = Utensils.Select(u => new
+            {
+                id = 0,
+                name = u.Name,
+                quantity = int.TryParse(u.Quantity, out int qty) ? qty : 0,
+                image = ""
+            }).ToList(),
+            user = new
+            {
+                id = CurrentUser.Id,
+                name = CurrentUser.Name,
+                level = CurrentUser.Level,
+                xp = CurrentUser.XP,
+                email = CurrentUser.Email
+            },
             image = ""
         };
 
-        await Http.PostAsJsonAsync("https://192.168.37.240:7067/KuechenQuest/Recipe", recipe);
+        var response = await Http.PostAsJsonAsync("https://192.168.37.240:7067/KuechenQuest/Recipe", recipe);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/start");
+        }
     }
 }
 
@@ -82,8 +190,14 @@
 
     <label>Zutaten:</label>
     <div class="input-group">
-        <input @bind="IngredientInput" placeholder="Zutat hinzufügen..." />
-        <input @bind="IngredientQuantity" placeholder="Menge" />
+        <select @bind="SelectedIngredient">
+            <option value="">-- Zutat auswählen --</option>
+            @foreach (var ingredient in AvailableIngredients)
+            {
+                <option>@ingredient</option>
+            }
+        </select>
+        <input @bind="SelectedIngredientQuantity" placeholder="Menge" />
         <button @onclick="AddIngredient">+</button>
         <button @onclick="() => ShowPopup = true">-</button>
     </div>
@@ -91,8 +205,14 @@
 
     <label>Utensilien:</label>
     <div class="input-group">
-        <input @bind="UtensilInput" placeholder="Utensil hinzufügen..." />
-        <input @bind="UtensilQuantity" placeholder="Menge" />
+        <select @bind="SelectedUtensil">
+            <option value="">-- Utensil auswählen --</option>
+            @foreach (var utensil in AvailableUtensils)
+            {
+                <option>@utensil</option>
+            }
+        </select>
+        <input @bind="SelectedUtensilQuantity" placeholder="Menge" />
         <button @onclick="AddUtensil">+</button>
         <button @onclick="() => ShowUtensilPopup = true">-</button>
     </div>
@@ -106,36 +226,6 @@
 
     <button @onclick="SubmitRecipe">Absenden</button>
 </div>
-
-@if (ShowPopup)
-{
-    <div class="popup">
-        <h3>Zutaten entfernen</h3>
-        @foreach (var ingredient in Ingredients)
-        {
-            <div class="popup-item">
-                <span>@ingredient.Name (@ingredient.Quantity)</span>
-                <button @onclick="() => RemoveIngredient(ingredient)">X</button>
-            </div>
-        }
-        <button @onclick="() => ShowPopup = false">Schließen</button>
-    </div>
-}
-
-@if (ShowUtensilPopup)
-{
-    <div class="popup">
-        <h3>Utensilien entfernen</h3>
-        @foreach (var utensil in Utensils)
-        {
-            <div class="popup-item">
-                <span>@utensil.Name (@utensil.Quantity)</span>
-                <button @onclick="() => RemoveUtensil(utensil)">X</button>
-            </div>
-        }
-        <button @onclick="() => ShowUtensilPopup = false">Schließen</button>
-    </div>
-}
 
 <style>
     .recipe-container {

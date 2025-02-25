@@ -1,6 +1,7 @@
 ﻿@page "/profil"
 @using LoginUI.Components.Models
 @using LoginUI.Components.Service
+@using Microsoft.Maui
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @inject UserService User
@@ -17,7 +18,6 @@
 
     <!-- XP Bar -->
     <div class="xp-container">
-        <div class="xp-bar" style="width: @(XPProgress)%"></div>
         <span>Level @User.CurrentUser.Level (@User.CurrentUser.XP/@(@User.CurrentUser.Level*100))</span>
     </div>
 
