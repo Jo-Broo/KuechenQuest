@@ -1,0 +1,131 @@
+@page "/shoppingcart"
+
+<link rel="stylesheet" href="css/shoppinglist.css">
+
+<!-- Hauptcontainer -->
+<div class="shopping-container">
+    <!-- Kopfzeile -->
+    <div class="header">
+        <img src="/images/icon-menu.png" alt="Menü" class="menu-icon"/>
+        <h2>Einkaufsliste</h2>
+        <img src="/images/LogoSmall.png" alt="App Logo" class="app-logo" />
+    </div>
+
+    <!-- Suchleiste -->
+    <div class="search-area">
+        <img src="/images/icons8-suche-50.png" alt="Search" class="search-icon" />
+        <input type="text" placeholder="Suche..."
+               class="search-input"
+               @bind="SearchText"
+               @bind:event="oninput" />
+    </div>
+
+    <!-- Kategorien + Artikel -->
+    @foreach (var cat in Categories)
+    {
+        <!-- Kategorien-Titel -->
+        <div class="category-card">@cat.Name</div>
+        <!-- Artikelzeile(n) -->
+        <div class="item-row">
+            @foreach (var prod in FilterProducts(cat.Products))
+            {
+                <!-- Per Klick wird der Zustand umgeschaltet -->
+                <div class="item-card @(prod.IsSelected ? "selected" : "not-selected")"
+                     @onclick="() => ToggleProduct(prod)">
+                    @prod.Name
+                </div>
+            }
+        </div>
+    }
+
+    <!-- (Optional) Liste mit aktuell ausgewählten Produkten -->
+    <div class="shopping-list-display">
+        <h3>Aktuell ausgewählt:</h3>
+        @if (!SelectedProducts.Any())
+        {
+            <p>(Keine Artikel ausgewählt)</p>
+        }
+        else
+        {
+            <ul>
+                @foreach (var item in SelectedProducts)
+                {
+                    <li>@item.Name</li>
+                }
+            </ul>
+        }
+    </div>
+</div>
+
+@code {
+    // Liste aller Kategorien + Produkte
+    private List<Category> Categories = new();
+
+    // Suchtext zum Filtern
+    private string SearchText = "";
+
+    // Abgeleitete Liste: alle "IsSelected"=true-Produkte
+    private IEnumerable<Product> SelectedProducts
+        => Categories.SelectMany(c => c.Products)
+                     .Where(p => p.IsSelected);
+
+    protected override void OnInitialized()
+    {
+        // Demo-Daten (hartkodiert)
+        var cat1 = new Category
+            {
+                Id = 1,
+                Name = "Gemüse und Obst",
+                Products = new List<Product>
+            {
+                new Product { Id = 101, Name = "Tomate" },
+                new Product { Id = 102, Name = "Gurke" },
+                new Product { Id = 103, Name = "Apfel" }
+            }
+            };
+
+        var cat2 = new Category
+            {
+                Id = 2,
+                Name = "Milchprodukte",
+                Products = new List<Product>
+            {
+                new Product { Id = 201, Name = "Milch" },
+                new Product { Id = 202, Name = "Käse" }
+            }
+            };
+
+        var cat3 = new Category
+            {
+                Id = 3,
+                Name = "Gewürze",
+                Products = new List<Product>
+            {
+                new Product { Id = 301, Name = "Salz" },
+                new Product { Id = 302, Name = "Pfeffer" }
+            }
+            };
+
+        Categories.Add(cat1);
+        Categories.Add(cat2);
+        Categories.Add(cat3);
+    }
+
+    // Klick-Event: toggelt den Zustand "IsSelected"
+    private void ToggleProduct(Product product)
+    {
+        product.IsSelected = !product.IsSelected;
+    }
+
+    // Liefert gefilterte Produkte (nach SearchText)
+    private IEnumerable<Product> FilterProducts(IEnumerable<Product> products)
+    {
+        if (string.IsNullOrWhiteSpace(SearchText))
+            return products;
+
+        return products.Where(p
+            => p.Name.Contains(SearchText, StringComparison.OrdinalIgnoreCase));
+    }
+}
+
+
