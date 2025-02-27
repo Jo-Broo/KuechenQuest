@@ -254,6 +254,7 @@ namespace KuechenQuestAPI.Classes
                     recipe.IMAGE = reader.GetString("IMAGE");
                     recipes.Add(recipe);
                 }
+                this.connection.Close();
 
                 foreach (Recipe recipe in recipes)
                 {
@@ -308,7 +309,7 @@ namespace KuechenQuestAPI.Classes
                     this.connection.Close();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 recipes = new List<Recipe>();
             }
