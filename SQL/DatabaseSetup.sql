@@ -102,20 +102,23 @@ CREATE TABLE User_Achievement(
 INSERT INTO Difficulty(NAME) VALUES ('Leicht'), ('Mittel'), ('Schwer');
 
 INSERT INTO User(NAME, EMAIL, PASSWORD, LEVEL, XP) VALUES
+('System', '--', '9876tzvsgudrfevt987654e3sdrftgz8h790iewfjhrbuzfd',1000,1),
 ('Niklas', 'Niklas@email.de', 'Admin',5,20),
 ('Florian', 'Florian@email.de', 'Admin',7,4),
 ('Cornelius', 'Cornelius@email.de', 'Admin',1,15),
 ('Jonas', 'Jonas@email.de', 'Admin',10,70);
 
 INSERT INTO Utensil (NAME, IMAGE) VALUES 
-('Löffel', '\\Bilder\\x.png'),
+('Loeffel', '\\Bilder\\x.png'),
 ('Messer', '\\Bilder\\x.png'),
 ('Schneidebrett', '\\Bilder\\x.png'),
 ('Pfanne', '\\Bilder\\x.png'),
-('Rührbesen', '\\Bilder\\x.png'),
-('Schüssel', '\\Bilder\\x.png');
+('Ruehrbesen', '\\Bilder\\x.png'),
+('Schuessel', '\\Bilder\\x.png'),
+('Topf (gross)', '\\Bilder\\x.png'),
+('Kochloeffel', '\\Bilder\\x.png');
 
-INSERT INTO Category (NAME) VALUES ('Unkategorisiert'), ('Obst/Gemuese'), ('Fleisch'), ('Milchprodukte');
+INSERT INTO Category (NAME) VALUES ('Unkategorisiert'), ('Obst/Gemuese'), ('Fleisch'), ('Milchprodukte'), ('Gewürze');
 
 INSERT INTO Ingredient (NAME, CATEGORY, IMAGE) VALUES 
 ('Mehl', 1, '\\Bilder\\x.png'),
@@ -123,7 +126,24 @@ INSERT INTO Ingredient (NAME, CATEGORY, IMAGE) VALUES
 ('Eier', 1, '\\Bilder\\x.png'),
 ('Milch', 4, '\\Bilder\\x.png'),
 ('Butter', 4, '\\Bilder\\x.png'),
-('Tomate', 2, '\\Bilder\\x.png');
+('Tomate', 2, '\\Bilder\\x.png'),
+('Zwiebel',2 ,'\\Bilder\\x.png'),
+('Knoblauch',2 ,'\\Bilder\\x.png'),
+('Ingwer',2 ,'\\Bilder\\x.png'),
+('Oel',1 ,'\\Bilder\\x.png'),
+('Kartoffel',2 ,'\\Bilder\\x.png'),
+('Tomatenfisch',3 ,'\\Bilder\\x.png'),
+('Fischfilet',3 ,'\\Bilder\\x.png'),
+('Meeresfrüchte',1 ,'\\Bilder\\x.png'),
+('Gewürzgurken',2 ,'\\Bilder\\x.png'),
+('Ketchup',1 ,'\\Bilder\\x.png'),
+('Passierte Tomaten',2 ,'\\Bilder\\x.png'),
+('Paprika',2 ,'\\Bilder\\x.png'),
+('Chillipulver',5 ,'\\Bilder\\x.png'),
+('Salz',5 ,'\\Bilder\\x.png'),
+('Pfeffer',5 ,'\\Bilder\\x.png'),
+('Gemüsebrühe',1 ,'\\Bilder\\x.png');
+
 
 INSERT INTO Achievement (NAME,DESCRIPTION,IMAGE) VALUES
 ('Starter','Hat das erste Rezept gekocht','bild.png'),
@@ -133,6 +153,7 @@ INSERT INTO Achievement (NAME,DESCRIPTION,IMAGE) VALUES
 INSERT INTO User_Achievement(USERID,ACHIEVEMENTID) VALUES
 (4,1),
 (4,2);
+
 -- Rezept für Pfannkuchen
 INSERT INTO Recipe(NAME, TIME, DIFFICULTY, INSTRUCTIONS, CREATEDBY, IMAGE)
 VALUES ('Pfannkuchen',20,2,'Alle Zutaten vermengen und in der Pfanne ausbacken.', 1, '\\Bilder\\x.png');
@@ -152,6 +173,32 @@ VALUES
 (1, 3, 1),  -- 1x Schneidebrett
 (1, 4, 1);  -- 1x Pfanne
 
--- select * from Recipe where ID = 1;
--- select * from Recipe_Utensil ru join Utensil u on ru.UTENSILID = u.ID where ru.RECIPEID = 1;
--- select * from Recipe_Ingredient ri join Ingredient i on ri.INGREDIENTID = i.ID where ri.RECIPEID = 1;
+-- Rezept von Frau Allstädt
+INSERT INTO Recipe(NAME, TIME, DIFFICULTY, INSTRUCTIONS, CREATEDBY, IMAGE)
+VALUES ('Fischsoljanka',30,1,'Zwiebel mit dem Messer auf dem Schneidebrett halbieren und grob in Streifen schneiden. Ingwer und Knoblauchzehen schälen und fein hacken. Kartoffeln schälen und stückeln. Diese Zutaten im großen Topf in Öl anschwitzen. Mit den passierten Tomaten aufgießen und nacheinander den Ketchup, die Gemüsebrühe, den Tomatenfisch, die Fischfilets und die Meeresfrüchte hinzugeben. Während die Soljanka leicht köchelt, werden die Gewürzgurken fein gehackt und der Paprika in dünne kurze Streifen geschnitten. Alles hinzufügen und weiter kochen lassen. Nach Wunsch mit Salz, Pfeffer und Chili würzen und eventuell etwas Wasser der Gewürzgurken oder Kräuteressig aufgießen. Abschmecken und Genießen.', 1, '\\Bilder\\x.png');
+-- Zutaten speichern
+INSERT INTO Recipe_Ingredient(RECIPEID, INGREDIENTID, QUANTITY)
+VALUES 
+(2, 7, 1),
+(2, 8, 2),
+(2, 9, 1),
+(2, 10, 1),
+(2, 11, 5),
+(2, 12, 2),
+(2, 13, 3),
+(2, 14, 1),
+(2, 15, 4),
+(2, 16, 200),
+(2, 17, 500),
+(2, 18, 2),
+(2, 19, 1),
+(2, 20, 1),
+(2, 21, 1),
+(2, 22, 200);
+-- Utensilien speichern
+INSERT INTO Recipe_Utensil (RECIPEID, UTENSILID, QUANTITY)
+VALUES 
+(2, 7, 1),
+(2, 8, 1),
+(2, 2, 1),
+(2, 3, 1);

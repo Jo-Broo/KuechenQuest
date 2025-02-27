@@ -18,7 +18,7 @@ namespace KuechenQuestAPI.Controllers
             return Ok(JsonSerializer.Serialize(result));
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("ID/{id}")]
         public IActionResult GetRecipe(int id)
         {
             Recipe? result = this.database.GetRecipeByID(id);
@@ -58,6 +58,15 @@ namespace KuechenQuestAPI.Controllers
             List<Difficulty> difficulties = this.database.GetAllDifficultys();
             if(difficulties.Count == 0) { return StatusCode(500); }
             return Ok(JsonSerializer.Serialize(difficulties));
+        }
+
+        [HttpGet("Name/{name}")]
+        public IActionResult GetRecipeByName(string name)
+        {
+            if(name == null) { return BadRequest(); }
+            Recipe? result = this.database.GetRecipeByName(name);
+            if (result == null) { return new StatusCodeResult(500); }
+            return Ok(JsonSerializer.Serialize(result));
         }
     }
 }

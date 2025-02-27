@@ -223,6 +223,30 @@ namespace KuechenQuestAPI.Classes
 
             return result;
         }
+        public Recipe? GetRecipeByName(string name)
+        {
+            Recipe? result = null;
+            try
+            {
+                string sql = string.Format(@"SELECT ID FROM Recipe WHERE NAME LIKE '{0}'",name);
+                this.connection.Open();
+                MySqlDataReader reader = this.ExecuteQuery(sql);
+                result = new Recipe();
+                while (reader.Read()) 
+                {
+                    result.ID = reader.GetInt32("ID");
+                }
+                this.connection.Close();
+
+                result = this.GetRecipeByID(result.ID);
+            }
+            catch (Exception)
+            {
+                result = null;
+            }
+
+            return result;
+        }
         public List<Recipe> GetAllRecipes()
         {
             List<Recipe> recipes = new List<Recipe>();
@@ -323,12 +347,8 @@ namespace KuechenQuestAPI.Classes
             {
                 // Rezept anlegen
                 string sql = string.Format(@"INSERT INTO
-                                             Recipe(NAME, TIME, DIFFICULTY, INSTRUCTIONS, IMAGE)
-                                             VALUES ('{0}',
-                                                      {1},
-                                                      {2},
-                                                      '{3}',
-                                                      '{4}');", recipe.NAME, recipe.TIME, recipe.DIFFICULTY, recipe.INSTRUCTIONS, recipe.IMAGE);
+                                             Recipe(NAME, TIME, DIFFICULTY, INSTRUCTIONS, CREATEDBY, IMAGE)
+                                             VALUES ('{0}',{1},{2},'{3}',{4},'{5}');", recipe.NAME, recipe.TIME, recipe.DIFFICULTY, recipe.INSTRUCTIONS, recipe.CREATEDBY, recipe.IMAGE);
                 this.connection.Open();
                 this.ExecuteQuery(sql);
                 this.connection.Close();
