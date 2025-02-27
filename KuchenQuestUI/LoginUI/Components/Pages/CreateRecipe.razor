@@ -1,7 +1,10 @@
 @page "/createrecipe"
 @using LoginUI.Components.Models
+@using LoginUI.Components.Service
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@inject UserService User
+
 
 @code {
     private string RecipeName { get; set; } = string.Empty;
@@ -21,8 +24,6 @@
     private string SelectedUtensil { get; set; } = string.Empty;
     private string SelectedUtensilQuantity { get; set; } = string.Empty;
 
-    private User CurrentUser { get; set; } = new(); // Benutzer laden
-
     private readonly Dictionary<string, int> DifficultyMapping = new()
     {
         { "Leicht", 1 },
@@ -30,7 +31,6 @@
         { "Schwer", 3 }
     };
 
-    // Die Modelle für Zutaten und Utensilien
     public class Ingredient
     {
         public int Id { get; set; }
@@ -50,21 +50,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadCurrentUser();
         await LoadAvailableIngredients();
         await LoadAvailableUtensils();
-    }
-
-    private async Task LoadCurrentUser()
-    {
-        try
-        {
-            CurrentUser = await Http.GetFromJsonAsync<User>("https://192.168.37.240:7067/KuechenQuest/User/Current");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Fehler beim Abrufen des Benutzers: {ex.Message}");
-        }
     }
 
     private async Task LoadAvailableIngredients()
@@ -131,6 +118,22 @@
 
     private async Task SubmitRecipe()
     {
+        // Debug-Ausgaben vor der Erstellung des Rezeptes
+        Console.WriteLine($"RecipeName: {RecipeName}");
+        Console.WriteLine($"TimeRequired: {TimeRequired}");
+        Console.WriteLine($"Instructions: {Instructions}");
+        Console.WriteLine($"Difficulty: {SelectedDifficulty}");
+        Console.WriteLine($"Ingredients: {string.Join(", ", Ingredients.Select(i => $"{i.Name} ({i.Quantity})"))}");
+        Console.WriteLine($"Utensils: {string.Join(", ", Utensils.Select(u => $"{u.Name} ({u.Quantity})"))}");
+        if (User.CurrentUser == null)
+        {
+            Console.WriteLine("User is null");
+        }
+        else
+        {
+            Console.WriteLine($"User: {User.CurrentUser.Name}, {User.CurrentUser.Id}");
+        }
+
         var recipe = new
         {
             id = 0,
@@ -138,9 +141,7 @@
             time = TimeRequired,
             difficulty = DifficultyMapping.GetValueOrDefault(SelectedDifficulty, 1),
             instructions = Instructions,
-            rating = 0,
-            ratingcount = 0,
-            createdby = CurrentUser.Id,
+            createdby = User.CurrentUser.Name,
             ingredients = Ingredients.Select(i => new
             {
                 id = 0,
@@ -158,20 +159,35 @@
             }).ToList(),
             user = new
             {
-                id = CurrentUser.Id,
-                name = CurrentUser.Name,
-                level = CurrentUser.Level,
-                xp = CurrentUser.XP,
-                email = CurrentUser.Email
+                id = User.CurrentUser.Id,
+                name = User.CurrentUser.Name,
+                level = User.CurrentUser.Level,
+                xp = User.CurrentUser.XP,
+                email = User.CurrentUser.Email
             },
             image = ""
         };
 
-        var response = await Http.PostAsJsonAsync("https://192.168.37.240:7067/KuechenQuest/Recipe", recipe);
+        Console.WriteLine($"Recipe Object: {recipe}");
 
-        if (response.IsSuccessStatusCode)
+        try
         {
-            Navigation.NavigateTo("/start");
+            var response = await Http.PostAsJsonAsync("https://192.168.37.240:7067/KuechenQuest/Recipe", recipe);
+
+            if (response.IsSuccessStatusCode)
+            {
+                Navigation.NavigateTo("/start");
+            }
+            else
+            {
+                Console.WriteLine($"Fehler beim Absenden des Rezepts. Status Code: {response.StatusCode}");
+                var errorResponse = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Fehlermeldung: {errorResponse}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fehler beim Absenden des Rezepts: {ex.Message}");
         }
     }
 }
