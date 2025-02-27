@@ -1,7 +1,9 @@
 @page "/shoppingcart"
-@using LoginUI.Components.Models
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@inject UserService User
+@using LoginUI.Components.Models
+@using LoginUI.Components.Service
 
 <link rel="stylesheet" href="css/shoppinglist.css">
 
@@ -50,7 +52,7 @@
             <ul>
                 @foreach (var item in SelectedProducts)
                 {
-                    <li>@item.NAME <input class="search-bar" type="text" style="border:1px solid white"/> </li>
+                    <li style="width:100%">@item.NAME <input class="search-bar" type="text" style="border:1px solid white"/> </li>
                 }
             </ul>
         }
@@ -64,8 +66,8 @@
     private List<Category> Categories = new();
     private List<Ingredient> Ingredients = new();
 
-    private IEnumerable<Ingredient> SelectedProducts
-        => Ingredients.Where(i => i.IsSelected);
+    private List<Ingredient> SelectedProducts
+        => Ingredients.Where(i => i.IsSelected).ToList();
 
 
     // Suchtext zum Filtern

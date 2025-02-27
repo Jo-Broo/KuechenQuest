@@ -11,6 +11,6 @@ namespace LoginUI.Components.Service
     {
         public User CurrentUser { get; set; }
 
-
+        public List<Ingredient> ShoppingList { get; set; } = new List<Ingredient>();
     }
 }
