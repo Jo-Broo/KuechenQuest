@@ -61,7 +61,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Remove="Components\Pages\Shoppingcart.razor" />
       <Content Remove="wwwroot\images\Logo.png" />
     </ItemGroup>
 
@@ -92,10 +91,6 @@
       <MauiImage Remove="Resources\Images\icons8-x-48.png" />
       <MauiImage Remove="Resources\Images\icons8-zahnrad-24.png" />
       <MauiImage Remove="Resources\Images\Logo.png" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Include="Components\Pages\Shoppingcart.razor" />
     </ItemGroup>
 
     <ItemGroup>
