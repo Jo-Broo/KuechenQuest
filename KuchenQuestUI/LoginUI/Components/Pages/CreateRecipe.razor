@@ -11,8 +11,8 @@
     private int TimeRequired { get; set; } = 0;
     private string Instructions { get; set; } = string.Empty;
     private string SelectedDifficulty { get; set; } = "Leicht";
-    private List<(string Name, string Quantity)> Ingredients { get; set; } = new();
-    private List<(string Name, string Quantity)> Utensils { get; set; } = new();
+    private List<Ingredient> Ingredients { get; set; } = new();
+    private List<Utensil> Utensils { get; set; } = new();
     private bool ShowPopup { get; set; } = false;
     private bool ShowUtensilPopup { get; set; } = false;
 
@@ -90,7 +90,14 @@
     {
         if (!string.IsNullOrWhiteSpace(SelectedIngredient) && !string.IsNullOrWhiteSpace(SelectedIngredientQuantity))
         {
-            Ingredients.Add((SelectedIngredient, SelectedIngredientQuantity));
+            Ingredients.Add(new Ingredient
+                {
+                    Name = SelectedIngredient,
+                    Quantity = int.TryParse(SelectedIngredientQuantity, out int qty) ? qty : 0,
+                    Id = 0, // Hier kannst du die tatsächliche ID setzen, falls du diese hast
+                    Image = "" // Falls du ein Bild hinzufügst, setze es hier
+                });
+
             SelectedIngredient = string.Empty;
             SelectedIngredientQuantity = string.Empty;
         }
@@ -100,18 +107,25 @@
     {
         if (!string.IsNullOrWhiteSpace(SelectedUtensil) && !string.IsNullOrWhiteSpace(SelectedUtensilQuantity))
         {
-            Utensils.Add((SelectedUtensil, SelectedUtensilQuantity));
+            Utensils.Add(new Utensil
+                {
+                    Name = SelectedUtensil,
+                    Quantity = int.TryParse(SelectedUtensilQuantity, out int qty) ? qty : 0,
+                    Id = 0, // Hier kannst du die tatsächliche ID setzen, falls du diese hast
+                    Image = "" // Falls du ein Bild hinzufügst, setze es hier
+                });
+
             SelectedUtensil = string.Empty;
             SelectedUtensilQuantity = string.Empty;
         }
     }
 
-    private void RemoveIngredient((string Name, string Quantity) ingredient)
+    private void RemoveIngredient(Ingredient ingredient)
     {
         Ingredients.Remove(ingredient);
     }
 
-    private void RemoveUtensil((string Name, string Quantity) utensil)
+    private void RemoveUtensil(Utensil utensil)
     {
         Utensils.Remove(utensil);
     }
@@ -146,16 +160,15 @@
             {
                 id = 0,
                 name = i.Name,
-                category = 0,
-                quantity = int.TryParse(i.Quantity, out int qty) ? qty : 0,
-                image = ""
+                quantity = i.Quantity,
+                image = i.Image
             }).ToList(),
             utensils = Utensils.Select(u => new
             {
                 id = 0,
                 name = u.Name,
-                quantity = int.TryParse(u.Quantity, out int qty) ? qty : 0,
-                image = ""
+                quantity = u.Quantity,
+                image = u.Image
             }).ToList(),
             user = new
             {
@@ -165,7 +178,6 @@
                 xp = User.CurrentUser.XP,
                 email = User.CurrentUser.Email
             },
-            image = ""
         };
 
         Console.WriteLine($"Recipe Object: {recipe}");
