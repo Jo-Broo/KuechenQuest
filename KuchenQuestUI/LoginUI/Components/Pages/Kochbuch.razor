@@ -1,30 +1,77 @@
 ﻿@page "/cookingbook"
 @inject NavigationManager NavManager
+@using LoginUI.Components.Models
+@using LoginUI.Components.Service
+@using Microsoft.Maui
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject UserService User
 
 <link rel="stylesheet" href="css/cookingbook.css">
 
 <div class="profile-container">
     <div class="header">
-        <img src="/images/icon-menu.png" alt="Menü" class="menu-icon" @onclick="ToggleSidebar"/>
-        <img src="/images/icons8-kochbuch-50.png" alt="Kochbuch" class="cook-logo"/>
-        <img src="/images/icons8-plus-96(1).png" alt="+" class="app-logo" @onclick="NavigateCreate"/>
+        <img src="/images/icon-menu.png" alt="Menü" class="menu-icon" @onclick="ToggleSidebar" />
+        <img src="/images/icons8-kochbuch-50.png" alt="Kochbuch" class="cook-logo" />
+        <img src="/images/icons8-plus-96(1).png" alt="+" class="app-logo" @onclick="NavigateCreate" />
     </div>
 
-    <input type="text" placeholder="Suche..." class="search-bar"/>
+    <input type="text" placeholder="Suche..." class="search-bar" />
     <button class="filter-btn">🔍</button>
 
     <div class="recipe-list">
-        <div class="recipe-card"><span class="indicator"></span>Rezept</div>
-        <div class="recipe-card"><span class="indicator"></span>Rezept</div>
-        <div class="recipe-card"><span class="indicator"></span>Rezept</div>
-        <div class="recipe-card"><span class="indicator"></span>Rezept</div>
+        @if (Recipes.Count > 0)
+        {
+            @foreach (var recipe in Recipes)
+            {
+                        <div class="recipe-card" @onclick="() => ShowRecipeDetails(recipe)">
+                            <span class="indicator"></span>
+                    @* <img src="@recipe.IMAGE" class="recipe-img" alt="@recipe.NAME" /> *@
+                            <h3 class="recipe-title">@recipe.NAME</h3>
+                            <p>Zeit: @recipe.TIME min | Schwierigkeit: @recipe.DIFFICULTY</p>
+                        </div>
+            }
+        }
+        else
+        {
+                <p>Lade Rezepte...</p>
+        }
     </div>
+
+    @if (SelectedRecipe != null)
+    {
+            <div class="recipe-details">
+                <h2>@SelectedRecipe.NAME</h2>
+            @* <img src="@SelectedRecipe.IMAGE" class="recipe-img" alt="@SelectedRecipe.NAME" /> *@
+                <p><strong>Zubereitungszeit:</strong> @SelectedRecipe.TIME min</p>
+                <p><strong>Schwierigkeit:</strong> @SelectedRecipe.DIFFICULTY</p>
+                <p><strong>Anleitung:</strong> @SelectedRecipe.INSTRUCTIONS</p>
+
+                <h3>Zutaten:</h3>
+                <ul>
+                @foreach (var ingredient in SelectedRecipe.Ingredients)
+                {
+                            <li>@ingredient.QUANTITY @ingredient.NAME</li>
+                }
+                </ul>
+
+                <h3>Utensilien:</h3>
+                <ul>
+                @foreach (var utensil in SelectedRecipe.Utensils)
+                {
+                            <li>@utensil.NAME (@utensil.QUANTITY)</li>
+                }
+                </ul>
+
+                <button class="close-btn2" @onclick="() => SelectedRecipe = null">Schließen</button>
+            </div>
+    }
 </div>
 
 <div class="sidebar" style="@SidebarStyle">
     <button class="close-btn" @onclick="ToggleSidebar">✖</button>
     <ul>
-        <li><img src="/images/LogoSmall.png"/><a href="/start">Home</a></li>
+        <li><img src="/images/LogoSmall.png" /><a href="/start">Home</a></li>
         <li><img src="/images/icons8-profilbild-100.png" /><a href="/profil">Profil</a></li>
         <li><img src="/images/icons8-kochbuch-50.png" /><a href="/cookingbook">Kochbuch</a></li>
         <li><img src="/images/icons8-einkaufsbeutel-48.png" /><a href="/shoppingcart">Einkaufsliste</a></li>
@@ -34,7 +81,7 @@
     </ul>
 </div>
 
-@code{
+@code {
     private bool IsSidebarOpen = false;
     private string SidebarStyle => IsSidebarOpen ? "left: 0;" : "left: -60%;";
 
@@ -46,5 +93,30 @@
     private void NavigateCreate()
     {
         NavManager.NavigateTo("/createrecipe");
+    }
+
+    private List<Recipe> Recipes = new();
+    private Recipe? SelectedRecipe;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadRecipes();
+    }
+
+    private async Task LoadRecipes()
+    {
+        try
+        {
+            Recipes = await Http.GetFromJsonAsync<List<Recipe>>("https://192.168.37.240:7067/KuechenQuest/Recipe") ?? new();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fehler beim Laden der Rezepte: {ex.Message}");
+        }
+    }
+
+    private void ShowRecipeDetails(Recipe recipe)
+    {
+        SelectedRecipe = recipe;
     }
 }
