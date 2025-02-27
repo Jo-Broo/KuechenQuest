@@ -55,6 +55,15 @@
 	outline: none;
 }
 
+.search-bar {
+	width: 80%;
+	padding: 10px;
+	border-radius: 5px;
+	border: none;
+	margin-top: 10px;
+	background: #3e3e5a;
+}
+
 /* Kategorie-Karten */
 .category-card {
 	background: #3e3e5a;

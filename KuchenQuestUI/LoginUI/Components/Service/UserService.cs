@@ -10,5 +10,7 @@ namespace LoginUI.Components.Service
     public class UserService
     {
         public User CurrentUser { get; set; }
+
+
     }
 }
