@@ -42,10 +42,13 @@ namespace KuechenQuestAPI.Controllers
             if (result == null) { return new StatusCodeResult(500); }
             return Ok();
         }
-        //[HttpDelete("{id}")]
-        //public IActionResult DeleteIngredient(int id)
-        //{
-        //    return new StatusCodeResult(500);
-        //}
+
+        [HttpGet("Category")]
+        public IActionResult GetCategorys()
+        {
+            List<Category> categories = this.database.GetAllCategorys();
+            if (categories.Count == 0){return StatusCode(500);}
+            return Ok(JsonSerializer.Serialize(categories));
+        }
     }
 }

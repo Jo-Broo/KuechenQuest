@@ -1,5 +1,4 @@
 ﻿using LoginUI.Components.Service;
-using LoginUI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Handlers;
@@ -40,9 +39,9 @@ public static class MauiProgram
         string dbPath = Path.Combine(FileSystem.AppDataDirectory, "KuechenQuest.db");
 
         // **Hier wird der DbContext registriert:**
-        builder.Services.AddDbContext<KuechenQuestDbContext>(options =>
-            options.UseSqlite($"Data Source={dbPath}")
-        );
+        //builder.Services.AddDbContext<KuechenQuestDbContext>(options =>
+        //    options.UseSqlite($"Data Source={dbPath}")
+        //);
 
 #if DEBUG
         builder.Services.AddBlazorWebViewDeveloperTools();

@@ -27,16 +27,18 @@ namespace KuechenQuestAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateRecipe([FromBody] Recipe recipe)
+        public IActionResult CreateRecipe([FromBody] Recipe? recipe)
         {
+            if (recipe == null){return BadRequest();}
             Recipe? result = this.database.CreateRecipe(recipe);
             if (result == null) { return new StatusCodeResult(500); }
             return CreatedAtAction(nameof(GetRecipe), new { id = result.ID }, result);
         }
 
         [HttpPut]
-        public IActionResult UpdateRecipe([FromBody] Recipe recipe)
+        public IActionResult UpdateRecipe([FromBody] Recipe? recipe)
         {
+            if (recipe == null) { return BadRequest(); }
             Recipe? result = this.database.UpdateRecipe(recipe);
             if (result == null) { return new StatusCodeResult(500); }
             return Ok(JsonSerializer.Serialize(result));
@@ -53,7 +55,7 @@ namespace KuechenQuestAPI.Controllers
         [HttpGet("Difficulty")]
         public IActionResult GetAllDifficultys()
         {
-            List<Difficulty> difficulties = this.database.GetDifficulty();
+            List<Difficulty> difficulties = this.database.GetAllDifficultys();
             if(difficulties.Count == 0) { return StatusCode(500); }
             return Ok(JsonSerializer.Serialize(difficulties));
         }
