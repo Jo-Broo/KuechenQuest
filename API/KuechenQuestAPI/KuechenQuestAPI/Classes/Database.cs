@@ -321,7 +321,7 @@ namespace KuechenQuestAPI.Classes
             try
             {
                 // Rezept anlegen
-                string sql = string.Format(@"INSERT INTO 
+                string sql = string.Format(@"INSERT INTO
                                              Recipe(NAME, TIME, DIFFICULTY, INSTRUCTIONS, IMAGE)
                                              VALUES ('{0}',
                                                       {1},
@@ -634,7 +634,7 @@ namespace KuechenQuestAPI.Classes
         public bool DeleteIngredientByID(int id) { return false; }
         #endregion     
         
-        public List<Difficulty> GetDifficulty() 
+        public List<Difficulty> GetAllDifficultys() 
         {
             List<Difficulty> result = new List<Difficulty>();
             try
@@ -659,12 +659,12 @@ namespace KuechenQuestAPI.Classes
 
             return result;
         }
-        public List<Category> GetCategory() 
+        public List<Category> GetAllCategorys() 
         {
             List<Category> result = new List<Category>();
             try
             {
-                string sql = string.Format(@"SELECT NAME FROM Difficulty;");
+                string sql = string.Format(@"SELECT * FROM Category;");
                 this.connection.Open();
                 MySqlDataReader reader = this.ExecuteQuery(sql);
                 while (reader.Read())
