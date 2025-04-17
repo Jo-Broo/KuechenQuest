@@ -1,9 +1,42 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.0" version="26.0.15">
   <diagram name="Seite-1" id="Uhe9Dqbko0n4Iin2S7LV">
-    <mxGraphModel>
+    <mxGraphModel dx="1150" dy="622" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="rkKOUDJ0aLy_YB_cvtWe-9" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#3399FF;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.devices.laptop;" vertex="1" parent="1">
+          <mxGeometry x="270" y="300" width="58" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="rkKOUDJ0aLy_YB_cvtWe-10" value="" style="html=1;verticalLabelPosition=bottom;align=center;labelBackgroundColor=#ffffff;verticalAlign=top;strokeWidth=2;strokeColor=#3399FF;shadow=0;dashed=0;shape=mxgraph.ios7.icons.smartphone;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="308" y="350" width="20" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rkKOUDJ0aLy_YB_cvtWe-11" value="" style="html=1;verticalLabelPosition=bottom;align=center;labelBackgroundColor=#ffffff;verticalAlign=top;strokeWidth=2;strokeColor=#3399FF;shadow=0;dashed=0;shape=mxgraph.ios7.icons.smartphone;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="240" y="345" width="50" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="rkKOUDJ0aLy_YB_cvtWe-5" value="" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="200" width="306" height="290" as="geometry" />
+        </mxCell>
+        <mxCell id="rkKOUDJ0aLy_YB_cvtWe-1" value="MySQL Datenbank" style="html=1;verticalLabelPosition=bottom;align=center;labelBackgroundColor=#ffffff;verticalAlign=top;strokeWidth=2;strokeColor=#3399FF;shadow=0;dashed=0;shape=mxgraph.ios7.icons.data;" vertex="1" parent="1">
+          <mxGeometry x="714" y="290" width="50" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="rkKOUDJ0aLy_YB_cvtWe-2" value="C#" style="aspect=fixed;sketch=0;html=1;dashed=0;whitespace=wrap;verticalLabelPosition=bottom;verticalAlign=top;fillColor=#3399FF;strokeColor=#ffffff;points=[[0.005,0.63,0],[0.1,0.2,0],[0.9,0.2,0],[0.5,0,0],[0.995,0.63,0],[0.72,0.99,0],[0.5,1,0],[0.28,0.99,0]];shape=mxgraph.kubernetes.icon2;kubernetesLabel=1;prIcon=api" vertex="1" parent="1">
+          <mxGeometry x="524" y="300" width="62.5" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="rkKOUDJ0aLy_YB_cvtWe-3" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=0.964;exitY=0.63;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="rkKOUDJ0aLy_YB_cvtWe-2">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="584" y="470" as="sourcePoint" />
+            <mxPoint x="714" y="338" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rkKOUDJ0aLy_YB_cvtWe-4" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#3399FF;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.devices.laptop;" vertex="1" parent="1">
+          <mxGeometry x="624" y="430" width="58" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="rkKOUDJ0aLy_YB_cvtWe-7" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="330" y="340" as="sourcePoint" />
+            <mxPoint x="527" y="338" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
