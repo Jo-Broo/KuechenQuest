@@ -4,6 +4,7 @@
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @inject UserService User
+@inject APIService API
 
 
 @code {
@@ -41,7 +42,7 @@
     {
         try
         {
-            var ingredients = await Http.GetFromJsonAsync<List<Ingredient>>("https://192.168.37.240:7067/KuechenQuest/Ingredient");
+            var ingredients = await Http.GetFromJsonAsync<List<Ingredient>>($"https://{this.API.GetAPI_IP()}:7067/KuechenQuest/Ingredient");
             if (ingredients != null)
             {
                 AvailableIngredients = ingredients;
@@ -57,7 +58,7 @@
     {
         try
         {
-            var utensils = await Http.GetFromJsonAsync<List<Utensil>>("https://192.168.37.240:7067/KuechenQuest/Utensil");
+            var utensils = await Http.GetFromJsonAsync<List<Utensil>>($"https://{this.API.GetAPI_IP()}:7067/KuechenQuest/Utensil");
             if (utensils != null)
             {
                 AvailableUtensils = utensils;
@@ -127,7 +128,7 @@
 
         try
         {
-            var response = await Http.PostAsJsonAsync("https://192.168.37.240:7067/KuechenQuest/Recipe", recipe);
+            var response = await Http.PostAsJsonAsync($"https://{this.API.GetAPI_IP()}:7067/KuechenQuest/Recipe", recipe);
 
             if (response.IsSuccessStatusCode)
             {

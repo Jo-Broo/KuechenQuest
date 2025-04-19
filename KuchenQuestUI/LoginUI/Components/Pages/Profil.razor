@@ -5,6 +5,7 @@
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @inject UserService User
+@inject APIService API
 
 <link rel="stylesheet" href="css/profil.css">
 
@@ -103,7 +104,7 @@
 
 
     private string Username = "Lädt..."; // Der Name des Benutzers
-    private string ProfilbildUrl = "http://192.168.37.240:80/Images/Placeholder.png"; // Das Profilbild des Benutzers
+    private string ProfilbildUrl = $"http://{APIService.API_IP}:80/Images/Placeholder.png"; // Das Profilbild des Benutzers
 
     private bool ShowErfolge = false; // Anzeige der Erfolge
     private bool ShowZutaten = false; // Anzeige der Zutaten
@@ -116,7 +117,7 @@
         try
         {
             // Direktes Erstellen des anonymen Objekts und Senden der POST-Anfrage
-            var response = await Http.GetAsync($"https://192.168.37.240:7067/KuechenQuest/User/Achievement/{User.CurrentUser.Id}");
+            var response = await Http.GetAsync($"https://{this.API.GetAPI_IP()}:7067/KuechenQuest/User/Achievement/{User.CurrentUser.Id}");
 
             if (response.IsSuccessStatusCode)
             {

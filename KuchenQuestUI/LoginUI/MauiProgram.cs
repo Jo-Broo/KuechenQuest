@@ -17,7 +17,8 @@ public static class MauiProgram
             {
                 fonts.AddFont("ComicSansMS.ttf", "ComicSansMS"); // Unverändert
             })
-            .Services.AddSingleton<UserService>();
+            .Services.AddScoped<UserService>()
+            .AddScoped<APIService>();
 
         builder.Services.AddMauiBlazorWebView();
 
@@ -31,7 +32,7 @@ public static class MauiProgram
 
             return new HttpClient(handler)
             {
-                BaseAddress = new Uri("https://192.168.50.240:7067/KuechenQuest/") // Die URL der API
+                BaseAddress = new Uri($"https://{APIService.API_IP}:7067/KuechenQuest/") // Die URL der API
             };
         });
 

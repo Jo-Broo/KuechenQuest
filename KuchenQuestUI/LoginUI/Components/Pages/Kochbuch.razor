@@ -6,6 +6,7 @@
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @inject UserService User
+@inject APIService API
 
 <link rel="stylesheet" href="css/cookingbook.css">
 
@@ -107,7 +108,7 @@
     {
         try
         {
-            Recipes = await Http.GetFromJsonAsync<List<Recipe>>("https://192.168.37.240:7067/KuechenQuest/Recipe") ?? new();
+            Recipes = await Http.GetFromJsonAsync<List<Recipe>>($"https://{this.API.GetAPI_IP()}:7067/KuechenQuest/Recipe") ?? new();
         }
         catch (Exception ex)
         {

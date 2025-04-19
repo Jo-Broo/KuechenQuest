@@ -1,7 +1,9 @@
 ﻿@page "/shoppingcart"
 @using LoginUI.Components.Models
+@using LoginUI.Components.Service
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@inject APIService API
 
 <link rel="stylesheet" href="css/shoppinglist.css">
 
@@ -124,7 +126,7 @@
         try
         {
             // Direktes Erstellen des anonymen Objekts und Senden der POST-Anfrage
-            var response = await Http.GetAsync($"https://192.168.37.240:7067/KuechenQuest/Ingredient/Category");
+            var response = await Http.GetAsync($"https://{this.API.GetAPI_IP()}:7067/KuechenQuest/Ingredient/Category");
 
             if (response.IsSuccessStatusCode)
             {
@@ -149,7 +151,7 @@
         try
         {
             // Direktes Erstellen des anonymen Objekts und Senden der POST-Anfrage
-            var response = await Http.GetAsync($"https://192.168.37.240:7067/KuechenQuest/Ingredient");
+            var response = await Http.GetAsync($"https://{this.API.GetAPI_IP()}:7067/KuechenQuest/Ingredient");
 
             if (response.IsSuccessStatusCode)
             {

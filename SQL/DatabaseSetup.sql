@@ -116,7 +116,10 @@ INSERT INTO Utensil (NAME, IMAGE) VALUES
 ('Ruehrbesen', '\\Bilder\\x.png'),
 ('Schuessel', '\\Bilder\\x.png'),
 ('Topf (gross)', '\\Bilder\\x.png'),
-('Kochloeffel', '\\Bilder\\x.png');
+('Kochloeffel', '\\Bilder\\x.png'),
+('Sieb', '\\Bilder\\x.png'),
+('Backpapier', '\\Bilder\\x.png'),
+('Kastenform', '\\Bilder\\x.png');
 
 INSERT INTO Category (NAME) VALUES ('Unkategorisiert'), ('Obst/Gemuese'), ('Fleisch'), ('Milchprodukte'), ('Gewürze');
 
@@ -127,7 +130,7 @@ INSERT INTO Ingredient (NAME, CATEGORY, IMAGE) VALUES
 ('Milch', 4, '\\Bilder\\x.png'),
 ('Butter', 4, '\\Bilder\\x.png'),
 ('Tomate', 2, '\\Bilder\\x.png'),
-('Zwiebel',2 ,'\\Bilder\\x.png'),
+('Zwiebel', 2,'\\Bilder\\x.png'),
 ('Knoblauch',2 ,'\\Bilder\\x.png'),
 ('Ingwer',2 ,'\\Bilder\\x.png'),
 ('Oel',1 ,'\\Bilder\\x.png'),
@@ -142,7 +145,36 @@ INSERT INTO Ingredient (NAME, CATEGORY, IMAGE) VALUES
 ('Chillipulver',5 ,'\\Bilder\\x.png'),
 ('Salz',5 ,'\\Bilder\\x.png'),
 ('Pfeffer',5 ,'\\Bilder\\x.png'),
-('Gemüsebrühe',1 ,'\\Bilder\\x.png');
+('Gemüsebrühe',1 ,'\\Bilder\\x.png'),
+('Suppengemüse',2,'\\Bilder\\x.png'),
+('Suppengemüse TK',2,'\\Bilder\\x.png'),
+('Wasser',1,'\\Bilder\\x.png'),
+('Erbsen',2,'\\Bilder\\x.png'),
+('Karotten',2,'\\Bilder\\x.png'),
+('Sahne',4,'\\Bilder\\x.png'),
+('Hefe',1,'\\Bilder\\x.png'),
+('Vollkornmehl',1,'\\Bilder\\x.png'),
+('Haselnusskerne',1,'\\Bilder\\x.png'),
+('Walnusskerne',1,'\\Bilder\\x.png'),
+('Mandeln',1,'\\Bilder\\x.png'),
+('Leinsamen',1,'\\Bilder\\x.png'),
+('Avocado',1,'\\Bilder\\x.png'),
+('Zitronensaft',1,'\\Bilder\\x.png'),
+('Zwiebeln',2,'\\Bilder\\x.png'),
+('Linsen',1,'\\Bilder\\x.png'),
+('Kichererbsen',1,'\\Bilder\\x.png'),
+('Curry',5,'\\Bilder\\x.png'),
+('Kurkuma',5,'\\Bilder\\x.png'),
+('Feta',4,'\\Bilder\\x.png'),
+('Koreander',5,'\\Bilder\\x.png'),
+('Tomatenwürfel',1,'\\Bilder\\x.png'),
+('Makkaroni',1,'\\Bilder\\x.png'),
+('Salami',3,'\\Bilder\\x.png'),
+('Tartar',1,'\\Bilder\\x.png'),
+('Tomatenketchup',1,'\\Bilder\\x.png'),
+('Käse',1,'\\Bilder\\x.png'),
+('Rosinen',1,'\\Bilder\\x.png'),
+('Petersilie',1,'\\Bilder\\x.png');
 
 
 INSERT INTO Achievement (NAME,DESCRIPTION,IMAGE) VALUES
@@ -151,8 +183,8 @@ INSERT INTO Achievement (NAME,DESCRIPTION,IMAGE) VALUES
 ('Ueberflieger','Hat 10 Rezepte gekocht','bild.png');
 
 INSERT INTO User_Achievement(USERID,ACHIEVEMENTID) VALUES
-(4,1),
-(4,2);
+(5,1),
+(5,2);
 
 -- Rezept für Pfannkuchen
 INSERT INTO Recipe(NAME, TIME, DIFFICULTY, INSTRUCTIONS, CREATEDBY, IMAGE)

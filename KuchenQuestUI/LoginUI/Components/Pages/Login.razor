@@ -3,6 +3,7 @@
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @inject UserService User
+@inject APIService API
 @using System.Net.Http.Json
 @using System.Text.Json
 @using LoginUI.Components.Models
@@ -49,7 +50,7 @@
         {
             // Direktes Erstellen des anonymen Objekts und Senden der POST-Anfrage
             var response = await Http.PostAsJsonAsync(
-                "https://192.168.37.240:7067/KuechenQuest/User/Login",
+                $"https://{this.API.GetAPI_IP()}:7067/KuechenQuest/User/Login",
                 new { username = Username, password = Password }
             );
 
